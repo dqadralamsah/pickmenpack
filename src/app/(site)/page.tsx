@@ -21,7 +21,7 @@ export default function Home() {
         title="Lagi promo di JPO"
         desc="Diupdate manual tiap kali jastiper survei ke mall. Stok bisa berubah sewaktu-waktu."
         action={
-          <Link href="/katalog" className="text-sm font-semibold text-brand">
+          <Link href="/katalog" className="eyebrow shrink-0 border-b border-accent/40 pb-1 text-accent hover:border-accent">
             Lihat semua →
           </Link>
         }
@@ -40,7 +40,7 @@ export default function Home() {
       <Section
         title="Pertanyaan yang sering muncul"
         action={
-          <Link href="/faq" className="text-sm font-semibold text-brand">
+          <Link href="/faq" className="eyebrow shrink-0 border-b border-accent/40 pb-1 text-accent hover:border-accent">
             Semua FAQ →
           </Link>
         }
@@ -49,19 +49,26 @@ export default function Home() {
       </Section>
 
       <Section>
-        <div className="rounded-2xl bg-ink px-6 py-10 text-center">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            Ada sepatu incaran di JPO?
-          </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-zinc-300">
-            Tulis itemnya, lihat estimasi biayanya langsung, baru putuskan.
-          </p>
-          <Link
-            href="/request"
-            className="mt-6 inline-block rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
-            Mulai Request Jastip
-          </Link>
+        <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-accent-soft px-6 py-14 text-center sm:py-20">
+          <div
+            aria-hidden
+            className="dotted pointer-events-none absolute inset-0 opacity-40"
+          />
+          <div className="relative">
+            <p className="eyebrow text-accent">Siap titip?</p>
+            <h2 className="mx-auto mt-4 max-w-lg text-3xl font-semibold text-ink sm:text-[44px] sm:leading-[1.08]">
+              Ada sepatu incaran di JPO?
+            </h2>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-zinc-600">
+              Tulis itemnya, lihat estimasi biayanya langsung, baru putuskan.
+            </p>
+            <Link
+              href="/request"
+              className="mt-8 inline-block rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-paper transition-colors hover:bg-accent-dark"
+            >
+              Mulai Request Jastip
+            </Link>
+          </div>
         </div>
       </Section>
     </>

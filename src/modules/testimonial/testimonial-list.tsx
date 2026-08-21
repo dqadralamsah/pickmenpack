@@ -7,18 +7,18 @@ export function TestimonialList({ items = testimonials }: { items?: typeof testi
       {items.map((t) => (
         <figure
           key={t.nama}
-          className="flex w-[82%] shrink-0 snap-start flex-col rounded-2xl border border-zinc-200 p-5 sm:w-auto"
+          className="flex w-[82%] shrink-0 snap-start flex-col rounded-2xl border border-zinc-200 bg-white p-6 sm:w-auto"
         >
-          <blockquote className="text-sm leading-relaxed text-zinc-700">
+          <blockquote className="text-[15px] leading-relaxed text-zinc-700">
             “{t.pesan}”
           </blockquote>
           {t.highlight && (
-            <p className="mt-3 inline-block self-start rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+            <p className="eyebrow mt-4 border-l-2 border-accent pl-3 text-accent">
               {t.highlight}
             </p>
           )}
-          <figcaption className="mt-auto flex items-center gap-3 border-t border-zinc-100 pt-3 sm:mt-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">
+          <figcaption className="mt-auto flex items-center gap-3 border-t border-zinc-200 pt-4 sm:mt-6">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-mono text-xs text-paper">
               {t.nama[0]}
             </span>
             <span className="text-sm">

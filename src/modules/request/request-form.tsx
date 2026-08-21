@@ -49,19 +49,17 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
 
   if (sent) {
     return (
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100 text-xl">
-          ✅
-        </span>
-        <h2 className="mt-3 text-lg font-semibold text-emerald-900">
+      <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+        <p className="eyebrow">Langkah 2 dari 2</p>
+        <h2 className="mt-3 text-2xl font-semibold">
           Request kamu sudah dirangkum
         </h2>
-        <p className="mt-1 text-sm leading-relaxed text-emerald-800">
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
           Langkah terakhir: kirim rangkuman ini ke WhatsApp jastiper untuk dicek
           ketersediaan stok & ukurannya di JPO. Belum ada pembayaran sampai stok
           dikonfirmasi.
         </p>
-        <pre className="mt-4 overflow-x-auto rounded-xl bg-white p-4 font-sans text-xs leading-relaxed whitespace-pre-wrap text-zinc-700">
+        <pre className="mt-4 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-50 p-4 font-sans text-xs leading-relaxed whitespace-pre-wrap text-zinc-700">
           {sent}
         </pre>
         <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
@@ -69,13 +67,13 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             href={waLink(sent)}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl bg-emerald-600 px-4 py-3.5 text-center text-sm font-semibold text-white active:scale-[.98] sm:py-2.5 sm:hover:bg-emerald-700"
+            className="rounded-full bg-emerald-700 px-5 py-3.5 text-center text-sm font-medium text-white active:scale-[.98] sm:py-2.5 sm:hover:bg-emerald-700"
           >
             Kirim via WhatsApp
           </a>
           <button
             onClick={() => setSent(null)}
-            className="rounded-xl border border-zinc-300 bg-white px-4 py-3.5 text-sm font-semibold active:bg-zinc-50 sm:py-2.5"
+            className="rounded-full border border-zinc-300 bg-white px-5 py-3.5 text-sm font-medium active:bg-zinc-50 sm:py-2.5"
           >
             Ubah request
           </button>
@@ -146,7 +144,7 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
                 onClick={() => setUkuran(u)}
                 className={`h-11 w-11 shrink-0 rounded-xl border text-sm font-medium transition-colors ${
                   ukuran === u
-                    ? "border-brand bg-brand text-white"
+                    ? "border-accent bg-accent text-paper"
                     : "border-zinc-200 text-zinc-600 active:bg-zinc-100"
                 }`}
               >
@@ -298,14 +296,14 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
 
         <button
           type="submit"
-          className="hidden w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white hover:bg-brand-dark lg:block"
+          className="hidden w-full rounded-full bg-accent px-4 py-3 text-sm font-medium text-paper hover:bg-accent-dark lg:block"
         >
           Kirim Request
         </button>
       </aside>
 
       {/* Mobile: bar aksi melayang di atas bottom nav, total selalu kelihatan. */}
-      <div className="fixed inset-x-3 bottom-[4.75rem] z-40 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white/95 p-3 shadow-xl backdrop-blur lg:hidden">
+      <div className="fixed inset-x-3 bottom-[4.75rem] z-40 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-paper/95 p-3 shadow-xl backdrop-blur lg:hidden">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] text-zinc-500">Total estimasi</p>
           <p className="truncate text-sm font-bold">
@@ -314,7 +312,7 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
         </div>
         <button
           type="submit"
-          className="shrink-0 rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-transform active:scale-[.98]"
+          className="shrink-0 rounded-full bg-accent px-5 py-3 text-sm font-medium text-paper transition-transform active:scale-[.98]"
         >
           Kirim Request
         </button>

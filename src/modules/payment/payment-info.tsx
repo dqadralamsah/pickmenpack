@@ -24,7 +24,7 @@ export function PaymentInfo() {
         <ol className="mt-4 space-y-3">
           {steps.map((s, i) => (
             <li key={s} className="flex gap-3 text-sm text-zinc-700">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-bold text-brand">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft font-mono text-[10px] text-accent">
                 {i + 1}
               </span>
               {s}
@@ -53,7 +53,7 @@ export function PaymentInfo() {
           </div>
         </div>
 
-        <p className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
+        <p className="mt-4 border-l-2 border-accent bg-accent-soft py-3.5 pr-4 pl-4 text-sm leading-relaxed text-zinc-700">
           Setelah transfer, kirim bukti bayarnya ke WhatsApp{" "}
           <a href={waLink("Halo, ini bukti transfer DP request jastip saya.")} className="font-semibold underline">
             {site.waNumber}

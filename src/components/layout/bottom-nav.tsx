@@ -66,7 +66,7 @@ export function BottomNav() {
   const path = usePathname();
 
   return (
-    <nav className="pb-safe fixed inset-x-0 bottom-0 z-50 border-t border-zinc-200 bg-white/95 backdrop-blur md:hidden">
+    <nav className="pb-safe fixed inset-x-0 bottom-0 z-50 border-t border-zinc-200 bg-paper/95 backdrop-blur md:hidden">
       <ul className="mx-auto flex max-w-md items-stretch justify-around px-1 pt-1.5">
         {items.map((it) => {
           const active = path === it.href;
@@ -76,14 +76,14 @@ export function BottomNav() {
                 href={it.href}
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-12 flex-col items-center gap-0.5 rounded-xl py-1 text-[10px] font-medium transition-colors active:bg-zinc-100 ${
-                  active ? "text-brand" : "text-zinc-500"
+                  active ? "text-accent" : "text-zinc-500"
                 }`}
               >
                 <span
                   className={
                     it.primary
-                      ? `-mt-4 flex h-11 w-11 items-center justify-center rounded-full text-white shadow-lg shadow-brand/30 ${
-                          active ? "bg-brand-dark" : "bg-brand"
+                      ? `-mt-4 flex h-11 w-11 items-center justify-center rounded-full text-paper shadow-lg shadow-accent/30 ${
+                          active ? "bg-accent-dark" : "bg-accent"
                         }`
                       : ""
                   }

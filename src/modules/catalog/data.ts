@@ -22,7 +22,7 @@ export const products: Product[] = [
     sizes: ["39", "40", "41", "42", "43"],
     store: "Nike Store JPO",
     stock: "ready",
-    accent: "from-orange-400 to-rose-500",
+    accent: "from-zinc-100 to-zinc-300",
   },
   {
     slug: "adidas-grand-court",
@@ -33,7 +33,7 @@ export const products: Product[] = [
     sizes: ["40", "41", "42", "44"],
     store: "Adidas JPO Lt. 2",
     stock: "ready",
-    accent: "from-sky-400 to-indigo-500",
+    accent: "from-zinc-200 to-zinc-100",
   },
   {
     slug: "new-balance-530",
@@ -44,7 +44,7 @@ export const products: Product[] = [
     sizes: ["40", "41", "42"],
     store: "NB Official JPO",
     stock: "limited",
-    accent: "from-slate-400 to-slate-600",
+    accent: "from-zinc-100 to-zinc-200",
   },
   {
     slug: "converse-chuck-70",
@@ -55,7 +55,7 @@ export const products: Product[] = [
     sizes: ["38", "39", "40", "41", "42", "43"],
     store: "Converse JPO",
     stock: "ready",
-    accent: "from-neutral-600 to-neutral-900",
+    accent: "from-zinc-200 to-zinc-300",
   },
   {
     slug: "vans-old-skool",
@@ -66,7 +66,7 @@ export const products: Product[] = [
     sizes: ["39", "40", "41", "42"],
     store: "Vans JPO Lt. 1",
     stock: "limited",
-    accent: "from-zinc-700 to-zinc-900",
+    accent: "from-zinc-100 to-zinc-300",
   },
   {
     slug: "puma-suede-classic",
@@ -77,7 +77,7 @@ export const products: Product[] = [
     sizes: ["40", "41", "42", "43", "44"],
     store: "Puma JPO",
     stock: "ready",
-    accent: "from-red-400 to-red-600",
+    accent: "from-zinc-200 to-zinc-100",
   },
   {
     slug: "asics-gel-1130",
@@ -88,7 +88,7 @@ export const products: Product[] = [
     sizes: ["41", "42", "43"],
     store: "Asics JPO Lt. 2",
     stock: "limited",
-    accent: "from-cyan-400 to-blue-600",
+    accent: "from-zinc-100 to-zinc-200",
   },
   {
     slug: "skechers-go-walk",
@@ -99,7 +99,7 @@ export const products: Product[] = [
     sizes: ["38", "39", "40"],
     store: "Skechers JPO",
     stock: "habis",
-    accent: "from-emerald-400 to-teal-600",
+    accent: "from-zinc-200 to-zinc-300",
   },
 ];
 

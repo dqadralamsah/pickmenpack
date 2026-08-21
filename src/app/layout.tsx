@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { BottomNav } from "@/components/layout/bottom-nav";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -26,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f05a28",
+  themeColor: "#e2571e",
   viewportFit: "cover",
 };
 
@@ -36,13 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      {/* pb-20 di mobile: ruang untuk bottom nav yang fixed */}
-      <body className="flex min-h-full flex-col pb-20 md:pb-0">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
-        <BottomNav />
-      </body>
+      <body className="min-h-full">{children}</body>
     </html>
   );
 }

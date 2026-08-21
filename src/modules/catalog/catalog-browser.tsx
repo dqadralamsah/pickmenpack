@@ -21,7 +21,7 @@ export function CatalogBrowser() {
             onClick={() => setBrand(b)}
             className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
               brand === b
-                ? "border-brand bg-brand text-white"
+                ? "border-accent bg-accent text-paper"
                 : "border-zinc-200 text-zinc-600 active:bg-zinc-100"
             }`}
           >
@@ -30,7 +30,7 @@ export function CatalogBrowser() {
         ))}
       </div>
 
-      <p className="mb-4 text-xs text-zinc-500">
+      <p className="eyebrow mb-5">
         {shown.length} item {brand !== "Semua" && `· ${brand}`}
       </p>
 

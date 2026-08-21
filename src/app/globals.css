@@ -1,12 +1,53 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #f05a28;
-  --color-brand-dark: #cf4718;
-  --color-brand-soft: #fff1ea;
-  --color-ink: #14181f;
+  /* Netral hangat yang bersih (bukan beige) — dasar monokrom biar gak butek. */
+  --color-ink: #1c1917;
+  --color-paper: #fbfbfa;
+
+  /* Satu aksen saja. Ganti 3 baris ini kalau mau biru/hijau. */
+  --color-accent: #e2571e;
+  --color-accent-dark: #bf4413;
+  --color-accent-soft: #fdf0e8;
+
+  --color-brand: var(--color-ink);
+  --color-brand-dark: #44403c;
+  --color-brand-soft: #f5f5f4;
+
+  /* zinc di-remap ke netral hangat — semua border/teks abu yang sudah ada ikut
+     kebawa tanpa perlu diubah satu-satu. */
+  --color-zinc-50: #fafaf9;
+  --color-zinc-100: #f5f5f4;
+  --color-zinc-200: #e7e5e4;
+  --color-zinc-300: #d6d3d1;
+  --color-zinc-400: #a8a29e;
+  --color-zinc-500: #78716c;
+  --color-zinc-600: #57534e;
+  --color-zinc-700: #44403c;
+  --color-zinc-800: #292524;
+  --color-zinc-900: #1c1917;
+  --color-zinc-950: #0c0a09;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Label mono uppercase — pengganti aksen warna buat bikin hierarki. */
+@utility eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-zinc-500);
+}
+
+/* Tekstur titik halus, dipasang di layer sendiri (absolute) supaya mask-nya
+   gak ikut nge-fade konten di atasnya. */
+@utility dotted {
+  background-image: radial-gradient(var(--color-zinc-300) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
 }
 
 /* Baris scroll horizontal ala app mobile, tanpa scrollbar bawaan desktop. */
@@ -27,10 +68,19 @@
 }
 
 body {
-  background: #ffffff;
+  background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Angka rata lebar biar harga & tabel gak "goyang". */
+body {
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.025em;
 }
 
 html {
