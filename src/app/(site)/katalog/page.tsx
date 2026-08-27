@@ -2,18 +2,19 @@ import type { Metadata } from "next";
 import { Section } from "@/components/layout/section";
 import { CatalogBrowser } from "@/modules/catalog/catalog-browser";
 
-export const metadata: Metadata = { title: "Katalog Promo" };
+export const metadata: Metadata = { title: "Catalog" };
 
-export default function KatalogPage() {
+export default async function KatalogPage({ searchParams }: PageProps<"/katalog">) {
+  const { brand } = await searchParams;
   return (
     <Section
-      title="Katalog Promo JPO"
-      desc="Sepatu yang lagi diskon di Mall JPO, hasil survei terakhir jastiper. Harga di bawah adalah harga toko — fee jastip dihitung terpisah saat kamu request."
+      title="Catalog"
+      desc="What is on sale right now, based on the latest store run. Prices below are store prices — the service fee is calculated separately when you request."
     >
-      <CatalogBrowser />
+      <CatalogBrowser initialBrand={typeof brand === "string" ? brand : undefined} />
       <p className="mt-6 text-xs leading-relaxed text-zinc-500">
-        Stok & harga bisa berubah sewaktu-waktu tanpa pemberitahuan. Ketersediaan
-        final selalu dikonfirmasi ulang sebelum invoice dikirim.
+        Stock and prices can change at any time without notice. Final availability
+        is always reconfirmed before the invoice goes out.
       </p>
     </Section>
   );

@@ -15,12 +15,12 @@ const stroke = {
 const items = [
   {
     href: "/",
-    label: "Beranda",
+    label: "Home",
     svg: <path d="M3.5 10.7 12 3.5l8.5 7.2V20a1 1 0 0 1-1 1h-4.7v-5.6H9.2V21H4.5a1 1 0 0 1-1-1z" {...stroke} />,
   },
   {
     href: "/katalog",
-    label: "Katalog",
+    label: "Catalog",
     svg: (
       <>
         <path d="M5.5 7.5h13l1 12.5h-15z" {...stroke} />
@@ -30,7 +30,7 @@ const items = [
   },
   {
     href: "/request",
-    label: "Titip",
+    label: "Request",
     primary: true,
     svg: (
       <>
@@ -41,7 +41,7 @@ const items = [
   },
   {
     href: "/cara-bayar",
-    label: "Bayar",
+    label: "Pay",
     svg: (
       <>
         <rect x="3" y="6" width="18" height="12" rx="2.5" {...stroke} />

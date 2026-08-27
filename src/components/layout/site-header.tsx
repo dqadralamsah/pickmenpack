@@ -2,23 +2,23 @@ import Link from "next/link";
 import { site, waLink } from "@/lib/site";
 
 const nav = [
-  { href: "/katalog", label: "Katalog Promo" },
-  { href: "/request", label: "Request Jastip" },
-  { href: "/cara-bayar", label: "Cara Bayar" },
+  { href: "/katalog", label: "Catalog" },
+  { href: "/request", label: "Request" },
+  { href: "/cara-bayar", label: "How to Pay" },
   { href: "/faq", label: "FAQ" },
 ];
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200 bg-paper/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-4 md:h-[68px]">
+      <div className="mx-auto flex h-14 w-full max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 md:h-[68px]">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-mono text-[10px] font-medium tracking-tight text-paper">
             {site.short}
           </span>
           <span className="leading-tight">
             <span className="block text-sm font-semibold tracking-tight">{site.brand}</span>
-            <span className="eyebrow block">Jastip sepatu · Mall JPO</span>
+            <span className="eyebrow block">Sneaker personal shopper</span>
           </span>
         </Link>
 
@@ -39,10 +39,10 @@ export function SiteHeader() {
           href="/request"
           className="hidden rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent-dark md:block"
         >
-          Titip Beli
+          Request a Pair
         </Link>
         <a
-          href={waLink(`Halo ${site.brand}, mau tanya soal jastip sepatu.`)}
+          href={waLink(`Hi ${site.brand}, I have a question about your service.`)}
           aria-label="Chat WhatsApp"
           className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 text-zinc-700 active:bg-zinc-100 md:hidden"
         >

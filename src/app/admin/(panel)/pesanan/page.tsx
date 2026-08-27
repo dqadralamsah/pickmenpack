@@ -98,7 +98,7 @@ export default async function AdminOrdersPage({
                     {[
                       ["Tanggal masuk", tanggal(o.createdAt)],
                       ["WhatsApp", o.wa],
-                      ["Toko di JPO", o.store],
+                      ["Toko", o.store],
                       [
                         "Pengiriman",
                         o.delivery === "cod" ? "COD Tangerang/Jakarta" : "Kirim luar kota",
@@ -160,7 +160,7 @@ export default async function AdminOrdersPage({
                     </div>
                     <div>
                       <label className={label} htmlFor={`net-${o.id}`}>
-                        Harga net aktual di JPO
+                        Harga net aktual di toko
                       </label>
                       <input
                         id={`net-${o.id}`}

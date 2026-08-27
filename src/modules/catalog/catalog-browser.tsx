@@ -4,11 +4,11 @@ import { useState } from "react";
 import { products } from "./data";
 import { ProductGrid } from "./product-grid";
 
-const brands = ["Semua", ...new Set(products.map((p) => p.brand))];
+const brands = ["All", ...new Set(products.map((p) => p.brand))];
 
-export function CatalogBrowser() {
-  const [brand, setBrand] = useState("Semua");
-  const shown = brand === "Semua" ? products : products.filter((p) => p.brand === brand);
+export function CatalogBrowser({ initialBrand = "All" }: { initialBrand?: string }) {
+  const [brand, setBrand] = useState(brands.includes(initialBrand) ? initialBrand : "All");
+  const shown = brand === "All" ? products : products.filter((p) => p.brand === brand);
 
   return (
     <>
@@ -31,7 +31,7 @@ export function CatalogBrowser() {
       </div>
 
       <p className="eyebrow mb-5">
-        {shown.length} item {brand !== "Semua" && `· ${brand}`}
+        {shown.length} items {brand !== "All" && `· ${brand}`}
       </p>
 
       <ProductGrid products={shown} />

@@ -20,7 +20,7 @@ export type Order = {
   store: string;
   /** Harga net perkiraan yang diisi customer di form request. */
   estimasi: number;
-  /** Harga net aktual setelah barang dibeli di JPO. null = belum dibeli. */
+  /** Harga net aktual setelah barang dibeli di toko. null = belum dibeli. */
   netFinal: number | null;
   delivery: Delivery;
   status: OrderStatus;
@@ -51,7 +51,7 @@ export const STATUS: Record<
     dot: "bg-amber-500",
   },
   dibeli: {
-    label: "Dibeli di JPO",
+    label: "Dibeli di toko",
     badge: "bg-violet-50 text-violet-700 border-violet-200",
     dot: "bg-violet-500",
   },

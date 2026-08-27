@@ -56,7 +56,7 @@ await productDb.save({
   priceOriginal: 100_000,
   pricePromo: 80_000,
   sizes: ["40"],
-  store: "Test JPO",
+  store: "Test Store",
   stock: "ready",
   accent: "from-zinc-100 to-zinc-300",
 });

@@ -1,42 +1,42 @@
 export const faqs = [
   {
-    q: "Barangnya dibeli dari mana?",
-    a: "Semua barang dibeli langsung di counter/gerai resmi Mall JPO — bukan reseller atau marketplace pihak ketiga. Kondisi, ukuran, dan keaslian barang dicek dulu sebelum diteruskan ke kamu.",
+    q: "Where do you buy the items?",
+    a: "Everything is bought at the brand's official store or counter — never a reseller or a third-party marketplace. Condition, size, and authenticity are checked before the pair is handed over to you.",
   },
   {
-    q: "Kenapa harganya cuma estimasi, bukan angka pasti?",
-    a: "Diskon di toko sering berlapis dan tulisan \"hingga X%\" bukan angka pasti. Harga net baru ketahuan saat barang benar-benar dibeli. Makanya kamu dapat rentang estimasi dulu, lalu invoice final setelah pembelian.",
+    q: "Why is the price only an estimate?",
+    a: "Store discounts often stack, and \"up to X%\" is not a fixed number. The net price is only known once the item is actually rung up. So you get an estimated range first, then a final invoice after the purchase.",
   },
   {
-    q: "Kalau harga aslinya ternyata lebih murah dari estimasi?",
-    a: "Selisihnya dikembalikan ke kamu, atau dipotong langsung dari pelunasan. Kalau ternyata lebih mahal, jastiper konfirmasi ulang dulu sebelum lanjut beli — gak akan dibeli diam-diam.",
+    q: "What if the real price is lower than the estimate?",
+    a: "The difference goes back to you, or is deducted from the final payment. If it turns out higher, we confirm with you before buying — nothing is purchased quietly.",
   },
   {
-    q: "Fee jastipnya berapa?",
-    a: "Fee tetap bertingkat, dihitung dari harga net setelah diskon: di bawah Rp500rb → Rp25rb–35rb; Rp500rb–1jt → Rp40rb–60rb; di atas Rp1jt → Rp75rb atau 5–7% (mana yang lebih besar).",
+    q: "How much is the service fee?",
+    a: "A flat tiered fee based on the net price after discount: under Rp500k → Rp25k–35k; Rp500k–1jt → Rp40k–60k; above Rp1jt → Rp75k or 5–7%, whichever is higher.",
   },
   {
-    q: "Bayarnya gimana?",
-    a: "DP 50% dari sisi atas estimasi sebelum barang dibeli, sisanya dilunasi setelah invoice final keluar. Transfer bank atau QRIS, lalu kirim bukti bayar via WhatsApp.",
+    q: "How do I pay?",
+    a: "A 50% deposit of the upper estimate before we buy, and the rest once the final invoice is out. Bank transfer or QRIS, then send the proof of payment over WhatsApp.",
   },
   {
-    q: "Kenapa harus DP di depan?",
-    a: "Barang dibeli pakai dana jastiper dulu. DP jadi bentuk komitmen supaya barang yang sudah dibeli gak nyangkut tanpa pembeli.",
+    q: "Why is a deposit required?",
+    a: "The item is bought with our own money first. The deposit is your commitment so a purchased pair doesn't end up without a buyer.",
   },
   {
-    q: "Berapa lama prosesnya?",
-    a: "Umumnya 1–3 hari kerja setelah DP masuk, tergantung jadwal ke JPO. Untuk luar kota tambah waktu pengiriman ekspedisi 2–4 hari.",
+    q: "How long does it take?",
+    a: "Usually 1–3 working days after the deposit lands, depending on the store run schedule. Add 2–4 days of courier time for other cities.",
   },
   {
-    q: "Kirim ke luar kota pakai apa?",
-    a: "J&T Express sebagai default (plafon ganti rugi asuransi sampai Rp20 juta, cocok untuk sepatu di atas Rp1 juta), TIKI sebagai alternatif. Barang selalu difoto/video sebelum dikirim sebagai bukti kondisi.",
+    q: "How do you ship outside the city?",
+    a: "J&T Express by default (insurance cover up to Rp20 million, which suits shoes above Rp1 million), TIKI as an alternative. Every item is photographed or filmed before packing as proof of condition.",
   },
   {
-    q: "Bisa refund?",
-    a: "Sebelum barang dibeli, DP bisa dikembalikan penuh. Setelah barang dibeli, refund hanya berlaku kalau barang tidak sesuai request (salah ukuran/model dari sisi jastiper).",
+    q: "Can I get a refund?",
+    a: "Before the item is bought, the deposit is fully refundable. After purchase, a refund only applies if the item doesn't match your request (wrong size or model on our side).",
   },
   {
-    q: "Stoknya habis pas jastiper sampai di JPO?",
-    a: "Kamu langsung dikabari untuk pilih alternatif (ukuran/warna/model lain). Kalau gak ada yang cocok, DP dikembalikan penuh.",
+    q: "What if the stock is gone when you get to the store?",
+    a: "You are told right away and offered alternatives — another size, colour, or model. If nothing fits, the deposit is refunded in full.",
   },
 ];

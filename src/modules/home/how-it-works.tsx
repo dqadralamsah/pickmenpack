@@ -1,23 +1,31 @@
-const langkah = [
-  { judul: "Pilih & request", isi: "Pilih dari katalog promo atau tulis sendiri item yang mau dititip." },
-  { judul: "Lihat estimasi", isi: "Rentang fee & total muncul otomatis. Setuju? Bayar DP dari sisi atas estimasi." },
-  { judul: "Jastiper belanja", isi: "Barang dicek langsung di JPO — stok, ukuran, kondisi. Harga net dikonfirmasi." },
-  { judul: "Invoice final", isi: "Bayar sesuai harga aktual. Lebih murah? Selisihnya dikembalikan." },
-  { judul: "Terima barang", isi: "COD area Tangerang–Jakarta, atau kirim via J&T untuk luar kota." },
+const steps = [
+  { title: "Pick & request", body: "Choose from the catalog or just describe the pair you want." },
+  { title: "See the estimate", body: "Fee and total show up instantly. Happy with it? Pay the deposit." },
+  { title: "We shop for it", body: "The pair is checked in person — stock, size, condition — and the net price confirmed." },
+  { title: "Final invoice", body: "You pay the actual price. Cheaper than the estimate? The difference is refunded." },
+  { title: "Get your pair", body: "COD around the service area, or insured courier for the rest of Indonesia." },
 ];
 
-/** Mobile: timeline vertikal biar ringkas. Desktop: 5 kolom dipisah garis rambut. */
+/** Timeline: garis vertikal + dot di mobile, garis horizontal di desktop. */
 export function HowItWorks() {
   return (
-    <ol className="grid border-t border-zinc-200 lg:grid-cols-5">
-      {langkah.map((l, i) => (
-        <li
-          key={l.judul}
-          className="border-b border-zinc-200 py-5 lg:border-b-0 lg:px-5 lg:py-7 lg:first:pl-0 lg:last:pr-0 lg:border-l lg:first:border-l-0"
-        >
-          <span className="eyebrow text-accent">Langkah {String(i + 1).padStart(2, "0")}</span>
-          <h3 className="mt-2.5 font-medium">{l.judul}</h3>
-          <p className="mt-1.5 text-sm leading-relaxed text-zinc-600">{l.isi}</p>
+    <ol className="relative grid gap-7 lg:grid-cols-5 lg:gap-8">
+      <span
+        aria-hidden
+        className="absolute top-4 bottom-4 left-[15px] w-px bg-zinc-200 lg:top-[15px] lg:right-6 lg:bottom-auto lg:left-6 lg:h-px lg:w-auto"
+      />
+
+      {steps.map((s, i) => (
+        <li key={s.title} className="relative flex gap-4 lg:block">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-paper font-mono text-[11px] font-medium text-zinc-500 transition-colors lg:h-8 lg:w-8">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <div className="lg:mt-5">
+            <h3 className="font-medium lg:text-[15px]">{s.title}</h3>
+            <p className="mt-1.5 max-w-xs text-sm leading-relaxed text-zinc-600">
+              {s.body}
+            </p>
+          </div>
         </li>
       ))}
     </ol>

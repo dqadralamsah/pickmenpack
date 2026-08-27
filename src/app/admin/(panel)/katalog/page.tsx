@@ -100,13 +100,13 @@ function ProductForm({ p }: { p?: ProductItem }) {
       </div>
       <div>
         <label className={label} htmlFor={`store-${key}`}>
-          Counter di JPO
+          Counter/toko
         </label>
         <input
           id={`store-${key}`}
           name="store"
           defaultValue={p?.store}
-          placeholder="Nike Store JPO"
+          placeholder="Nike Official Store"
           className={field}
         />
       </div>

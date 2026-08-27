@@ -1,60 +1,65 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 
-const ringkas = [
-  ["Fee jastip", "mulai Rp25rb"],
-  ["Selisih harga", "100% balik"],
-  ["Respon", "< 2 jam"],
-  ["COD", "Tangerang–Jakarta"],
+const quick = [
+  ["Service fee", "from Rp25k"],
+  ["Price difference", "100% refunded"],
+  ["Reply time", "< 2 hours"],
+  ["COD area", site.serviceArea],
 ];
 
-const trust = ["Counter resmi JPO", "Fee mulai Rp25rb", "COD Tangerang–Jakarta", "Kirim J&T + asuransi"];
+const trust = [
+  "Bought at official stores",
+  "Fee from Rp25k",
+  `COD ${site.serviceArea}`,
+  "Insured nationwide shipping",
+];
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-zinc-200 bg-paper">
       <div aria-hidden className="dotted pointer-events-none absolute inset-0" />
 
-      <div className="relative mx-auto w-full max-w-6xl px-4 pt-9 pb-8 sm:pt-24 sm:pb-20">
-        <div className="lg:grid lg:grid-cols-[1fr_19rem] lg:items-center lg:gap-14">
-        <div className="max-w-3xl">
-          <p className="eyebrow flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            Musim promo Desember · Harbolnas 12.12 &amp; EOSS
-          </p>
+      <div className="relative mx-auto w-full max-w-[1280px] px-4 pt-9 pb-8 sm:px-6 sm:pt-20 sm:pb-20">
+        <div className="lg:grid lg:grid-cols-[1fr_20rem] lg:items-center lg:gap-14">
+          <div className="max-w-3xl">
+            <p className="eyebrow flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              Sale season · 12.12 &amp; end of season
+            </p>
 
-          <h1 className="mt-5 text-[32px] leading-[1.05] font-semibold sm:mt-7 sm:text-[62px]">
-            Titip beli sepatu diskon
-            <span className="block text-zinc-400">dari counter resmi Mall JPO.</span>
-          </h1>
+            <h1 className="mt-5 text-[32px] leading-[1.05] font-semibold sm:mt-7 sm:text-[62px]">
+              Sneakers on sale,
+              <span className="block text-zinc-400">bought at the official store.</span>
+            </h1>
 
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-600 sm:mt-7 sm:text-base">
-            {site.brand} belanja langsung di tokonya — barang dicek fisiknya
-            dulu, fee-nya jelas sejak awal, dan selisih harga selalu
-            dikembalikan. Gak perlu chat panjang buat tahu totalnya berapa.
-          </p>
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-600 sm:mt-7 sm:text-base">
+              {site.brand} walks into the store for you — the pair is checked in
+              person, the fee is fixed before we buy, and any price difference
+              comes straight back to you. No long chat just to learn the total.
+            </p>
 
-          <div className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
-            <Link
-              href="/request"
-              className="rounded-full bg-accent px-6 py-3.5 text-center text-sm font-medium text-paper transition-colors active:scale-[.98] sm:py-3 sm:hover:bg-accent-dark"
-            >
-              Hitung Estimasi &amp; Request
-            </Link>
-            <Link
-              href="/katalog"
-              className="rounded-full border border-zinc-300 px-6 py-3.5 text-center text-sm font-medium transition-colors active:bg-zinc-100 sm:py-3 sm:hover:border-accent"
-            >
-              Lihat Katalog Promo
-            </Link>
+            <div className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
+              <Link
+                href="/request"
+                className="rounded-full bg-accent px-6 py-3.5 text-center text-sm font-medium text-paper transition-colors active:scale-[.98] sm:py-3 sm:hover:bg-accent-dark"
+              >
+                Get an estimate
+              </Link>
+              <Link
+                href="/katalog"
+                className="rounded-full border border-zinc-300 px-6 py-3.5 text-center text-sm font-medium transition-colors active:bg-zinc-100 sm:py-3 sm:hover:border-accent"
+              >
+                Browse catalog
+              </Link>
+            </div>
           </div>
-        </div>
 
-          {/* Panel ringkas — cuma di desktop, biar sisi kanan hero gak kosong. */}
+          {/* Panel ringkas — desktop only, biar sisi kanan hero gak kosong. */}
           <aside className="hidden rounded-2xl border border-zinc-200 bg-white p-6 lg:block">
-            <p className="eyebrow text-accent">Ringkasnya</p>
+            <p className="eyebrow text-accent">At a glance</p>
             <dl className="mt-4 divide-y divide-zinc-200 text-sm">
-              {ringkas.map(([k, v]) => (
+              {quick.map(([k, v]) => (
                 <div key={k} className="flex items-baseline justify-between gap-4 py-3">
                   <dt className="text-zinc-500">{k}</dt>
                   <dd className="font-mono text-[13px] font-medium">{v}</dd>
@@ -76,32 +81,34 @@ export function Hero() {
   );
 }
 
-const keunggulan = [
+/** Empat titik yang menguntungkan dua sisi — customer dan jastipernya. */
+const winWin = [
   {
-    judul: "Dibeli di counter resmi",
-    isi: "Bukan reseller, bukan marketplace. Struk toko selalu ikut dikirim ke kamu.",
+    title: "Flat fee, never a percentage",
+    body: "The fee is locked to a price bracket, not to how expensive the shoe is — so the cost is known before we buy.",
   },
   {
-    judul: "Fee tetap, bukan persentase",
-    isi: "Mulai Rp25rb dan dihitung dari harga net setelah diskon — bukan harga sebelum coret.",
+    title: "The price difference goes back",
+    body: "If the register rings up lower than the estimate, the rest returns to you instead of quietly becoming margin.",
   },
   {
-    judul: "Selisih harga dikembalikan",
-    isi: "Kalau harga aslinya lebih murah dari estimasi, sisanya balik ke kamu. Otomatis.",
+    title: "Deposit first, settle on the invoice",
+    body: "Half up front, the rest once the real receipt total is in. You only settle what was actually paid at the counter.",
+  },
+  {
+    title: "One store run, many orders",
+    body: "Requests are batched into the same trip instead of one trip per pair, and the saving shows up in your fee.",
   },
 ];
 
 export function WhyUs() {
   return (
-    <div className="grid border-t border-zinc-200 sm:grid-cols-3">
-      {keunggulan.map((k, i) => (
-        <div
-          key={k.judul}
-          className="border-b border-zinc-200 py-6 sm:border-b-0 sm:px-6 sm:py-8 sm:first:pl-0 sm:last:pr-0 sm:border-l sm:first:border-l-0"
-        >
+    <div className="grid gap-px overflow-hidden rounded-2xl bg-zinc-200 sm:grid-cols-2 lg:grid-cols-4">
+      {winWin.map((w, i) => (
+        <div key={w.title} className="flex flex-col bg-paper p-6 sm:p-7">
           <span className="eyebrow">{String(i + 1).padStart(2, "0")}</span>
-          <h3 className="mt-3 font-medium">{k.judul}</h3>
-          <p className="mt-1.5 text-sm leading-relaxed text-zinc-600">{k.isi}</p>
+          <h3 className="mt-3 font-medium">{w.title}</h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-zinc-600">{w.body}</p>
         </div>
       ))}
     </div>

@@ -12,7 +12,7 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section className={`mx-auto w-full max-w-6xl px-4 py-10 sm:py-16 ${className}`}>
+    <section className={`mx-auto w-full max-w-[1280px] px-4 py-10 sm:px-6 sm:py-16 ${className}`}>
       {(title || action) && (
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3 sm:mb-8">
           <div>

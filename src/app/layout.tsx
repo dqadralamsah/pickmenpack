@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: `%s · ${site.brand}`,
   },
   description:
-    "Jastip sepatu diskon dari counter resmi Mall JPO. Fee tetap bertingkat, estimasi biaya transparan, selisih harga dikembalikan.",
+    "We buy your sneakers at the official store and hand them over. Flat tiered fee, transparent estimate, price difference always refunded.",
 };
 
 export const viewport: Viewport = {
@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="id"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">{children}</body>

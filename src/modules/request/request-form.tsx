@@ -10,19 +10,19 @@ const field =
   "w-full rounded-xl border border-zinc-300 px-3.5 py-3 text-base outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20 sm:text-sm";
 const label = "mb-1.5 block text-sm font-medium";
 
-const ukuranPreset = ["38", "39", "40", "41", "42", "43", "44"];
+const sizePreset = ["38", "39", "40", "41", "42", "43", "44"];
 
 const range = (r: { min: number; max: number }) =>
   r.min === r.max ? rupiah(r.min) : `${rupiah(r.min)} – ${rupiah(r.max)}`;
 
 export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
   const [item, setItem] = useState(defaultItem);
-  const [ukuran, setUkuran] = useState("");
-  const [harga, setHarga] = useState("");
+  const [size, setSize] = useState("");
+  const [price, setPrice] = useState("");
   const [delivery, setDelivery] = useState<Delivery>("cod");
   const [sent, setSent] = useState<string | null>(null);
 
-  const netPrice = Number(harga) || 0;
+  const netPrice = Number(price) || 0;
   const fee = estimateFee(netPrice);
   const total = estimateTotal(netPrice, delivery);
   const dp = dpAmount(total);
@@ -31,16 +31,16 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const pesan = [
-      `Halo ${site.brand}, mau titip beli sepatu:`,
-      `Nama: ${f.get("nama")}`,
+      `Hi ${site.brand}, I'd like you to buy this for me:`,
+      `Name: ${f.get("nama")}`,
       `Item: ${f.get("item")}`,
-      `Ukuran: ${f.get("ukuran")}`,
-      `Estimasi harga: ${rupiah(netPrice)}`,
-      `Pengiriman: ${delivery === "cod" ? "COD Tangerang/Jakarta" : "Kirim luar kota"}`,
-      f.get("referensi") ? `Referensi: ${f.get("referensi")}` : "",
-      f.get("catatan") ? `Catatan: ${f.get("catatan")}` : "",
-      `Estimasi total: ${range(total)}`,
-      `DP (50% dari sisi atas): ${rupiah(dp)}`,
+      `Size: ${f.get("ukuran")}`,
+      `Estimated price: ${rupiah(netPrice)}`,
+      `Delivery: ${delivery === "cod" ? `COD ${site.serviceArea}` : "Courier, out of town"}`,
+      f.get("referensi") ? `Reference: ${f.get("referensi")}` : "",
+      f.get("catatan") ? `Notes: ${f.get("catatan")}` : "",
+      `Estimated total: ${range(total)}`,
+      `Deposit (50% of upper estimate): ${rupiah(dp)}`,
     ]
       .filter(Boolean)
       .join("\n");
@@ -50,14 +50,13 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
   if (sent) {
     return (
       <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-        <p className="eyebrow">Langkah 2 dari 2</p>
+        <p className="eyebrow">Step 2 of 2</p>
         <h2 className="mt-3 text-2xl font-semibold">
-          Request kamu sudah dirangkum
+          Your request is ready
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-zinc-600">
-          Langkah terakhir: kirim rangkuman ini ke WhatsApp jastiper untuk dicek
-          ketersediaan stok & ukurannya di JPO. Belum ada pembayaran sampai stok
-          dikonfirmasi.
+          Last step: send this summary over WhatsApp so we can check stock and
+          size at the store. Nothing is paid until availability is confirmed.
         </p>
         <pre className="mt-4 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-50 p-4 font-sans text-xs leading-relaxed whitespace-pre-wrap text-zinc-700">
           {sent}
@@ -69,13 +68,13 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             rel="noopener noreferrer"
             className="rounded-full bg-emerald-700 px-5 py-3.5 text-center text-sm font-medium text-white active:scale-[.98] sm:py-2.5 sm:hover:bg-emerald-700"
           >
-            Kirim via WhatsApp
+            Send via WhatsApp
           </a>
           <button
             onClick={() => setSent(null)}
             className="rounded-full border border-zinc-300 bg-white px-5 py-3.5 text-sm font-medium active:bg-zinc-50 sm:py-2.5"
           >
-            Ubah request
+            Edit request
           </button>
         </div>
       </div>
@@ -88,7 +87,7 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={label} htmlFor="nama">
-              Nama
+              Name
             </label>
             <input
               id="nama"
@@ -96,12 +95,12 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
               required
               autoComplete="name"
               className={field}
-              placeholder="Nama kamu"
+              placeholder="Your name"
             />
           </div>
           <div>
             <label className={label} htmlFor="wa">
-              No. WhatsApp
+              WhatsApp number
             </label>
             <input
               id="wa"
@@ -119,7 +118,7 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
 
         <div>
           <label className={label} htmlFor="item">
-            Item yang dititip
+            What should we buy?
           </label>
           <input
             id="item"
@@ -128,22 +127,22 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             value={item}
             onChange={(e) => setItem(e.target.value)}
             className={field}
-            placeholder="Contoh: Nike Revolution 7"
+            placeholder="e.g. Nike Revolution 7"
           />
         </div>
 
         <div>
           <label className={label} htmlFor="ukuran">
-            Ukuran
+            Size
           </label>
           <div className="no-scrollbar -mx-4 mb-2 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0">
-            {ukuranPreset.map((u) => (
+            {sizePreset.map((u) => (
               <button
                 key={u}
                 type="button"
-                onClick={() => setUkuran(u)}
+                onClick={() => setSize(u)}
                 className={`h-11 w-11 shrink-0 rounded-xl border text-sm font-medium transition-colors ${
-                  ukuran === u
+                  size === u
                     ? "border-accent bg-accent text-paper"
                     : "border-zinc-200 text-zinc-600 active:bg-zinc-100"
                 }`}
@@ -156,16 +155,16 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             id="ukuran"
             name="ukuran"
             required
-            value={ukuran}
-            onChange={(e) => setUkuran(e.target.value)}
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
             className={field}
-            placeholder="Atau ketik ukuran lain (mis. 37.5 / US 9)"
+            placeholder="Or type another size (e.g. 37.5 / US 9)"
           />
         </div>
 
         <div>
           <label className={label} htmlFor="harga">
-            Estimasi harga barang
+            Estimated item price
           </label>
           <div className="relative">
             <span className="absolute top-1/2 left-3.5 -translate-y-1/2 text-base text-zinc-400 sm:text-sm">
@@ -179,21 +178,21 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
               min={50_000}
               step={1000}
               required
-              value={harga}
-              onChange={(e) => setHarga(e.target.value)}
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
               className={`${field} pl-11`}
               placeholder="750000"
             />
           </div>
           <p className="mt-1.5 text-xs text-zinc-500">
-            Perkiraan harga di toko saja — angka pastinya dikonfirmasi jastiper
-            setelah cek langsung di JPO.
+            A rough store price is enough — the exact number is confirmed once
+            we check it in person.
           </p>
         </div>
 
         <div>
           <label className={label} htmlFor="referensi">
-            Link / foto referensi <span className="text-zinc-400">(opsional)</span>
+            Reference link <span className="text-zinc-400">(optional)</span>
           </label>
           <input
             id="referensi"
@@ -201,17 +200,17 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             type="url"
             inputMode="url"
             className={field}
-            placeholder="Link produk atau IG post"
+            placeholder="Product link or IG post"
           />
         </div>
 
         <fieldset>
-          <legend className={label}>Cara terima barang</legend>
+          <legend className={label}>How do you want it delivered?</legend>
           <div className="grid gap-2.5 sm:grid-cols-2">
             {(
               [
-                ["cod", "COD Tangerang / Jakarta", "Gratis ongkir, ketemu langsung"],
-                ["kirim", "Kirim luar kota", `Ongkir ${range(ONGKIR.kirim)} · J&T`],
+                ["cod", `COD ${site.serviceArea}`, "Free delivery, handed over in person"],
+                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T`],
               ] as const
             ).map(([value, title, note]) => (
               <label
@@ -246,75 +245,75 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
 
         <div>
           <label className={label} htmlFor="catatan">
-            Catatan <span className="text-zinc-400">(opsional)</span>
+            Notes <span className="text-zinc-400">(optional)</span>
           </label>
           <textarea
             id="catatan"
             name="catatan"
             rows={3}
             className={field}
-            placeholder="Warna, alternatif ukuran, dll."
+            placeholder="Colour, backup size, anything else."
           />
         </div>
       </div>
 
-      {/* Rincian lengkap: sidebar sticky di desktop, kartu biasa di mobile. */}
+      {/* Rincian: sidebar sticky di desktop, kartu biasa di mobile. */}
       <aside className="mb-24 h-fit space-y-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-5 lg:sticky lg:top-24 lg:mb-0">
-        <h2 className="font-semibold">Estimasi biaya</h2>
+        <h2 className="font-semibold">Cost estimate</h2>
 
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">Harga barang</dt>
+            <dt className="text-zinc-500">Item price</dt>
             <dd>{rupiah(netPrice)}</dd>
           </div>
           <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">Fee jastip</dt>
+            <dt className="text-zinc-500">Service fee</dt>
             <dd className="text-right">{netPrice ? range(fee) : "—"}</dd>
           </div>
           <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">Ongkir + packing</dt>
+            <dt className="text-zinc-500">Shipping + packing</dt>
             <dd className="text-right">
-              {delivery === "cod" ? "Gratis" : range(ONGKIR.kirim)}
+              {delivery === "cod" ? "Free" : range(ONGKIR.kirim)}
             </dd>
           </div>
           <div className="flex justify-between gap-3 border-t border-zinc-200 pt-2 font-semibold">
-            <dt>Total estimasi</dt>
+            <dt>Estimated total</dt>
             <dd className="text-right">{netPrice ? range(total) : "—"}</dd>
           </div>
           <div className="flex justify-between gap-3 text-brand">
-            <dt className="font-medium">DP 50% (dari sisi atas)</dt>
+            <dt className="font-medium">Deposit 50% (upper estimate)</dt>
             <dd className="font-semibold">{netPrice ? rupiah(dp) : "—"}</dd>
           </div>
         </dl>
 
         <p className="text-xs leading-relaxed text-zinc-500">
-          Fee dihitung dari harga <strong>net final</strong> setelah semua diskon
-          toko. Angka di atas masih rentang — invoice final dikirim setelah
-          barang benar-benar dibeli di JPO, dan selisih lebih murah selalu
-          dikembalikan.
+          The fee is based on the <strong>final net price</strong> after every
+          store discount. The numbers above are still a range — the final invoice
+          comes after the pair is actually bought, and anything cheaper is
+          refunded.
         </p>
 
         <button
           type="submit"
           className="hidden w-full rounded-full bg-accent px-4 py-3 text-sm font-medium text-paper hover:bg-accent-dark lg:block"
         >
-          Kirim Request
+          Send request
         </button>
       </aside>
 
       {/* Mobile: bar aksi melayang di atas bottom nav, total selalu kelihatan. */}
       <div className="fixed inset-x-3 bottom-[4.75rem] z-40 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-paper/95 p-3 shadow-xl backdrop-blur lg:hidden">
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] text-zinc-500">Total estimasi</p>
+          <p className="text-[11px] text-zinc-500">Estimated total</p>
           <p className="truncate text-sm font-bold">
-            {netPrice ? range(total) : "Isi harga dulu"}
+            {netPrice ? range(total) : "Add a price first"}
           </p>
         </div>
         <button
           type="submit"
           className="shrink-0 rounded-full bg-accent px-5 py-3 text-sm font-medium text-paper transition-transform active:scale-[.98]"
         >
-          Kirim Request
+          Send request
         </button>
       </div>
     </form>

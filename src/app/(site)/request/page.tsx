@@ -3,7 +3,7 @@ import { Section } from "@/components/layout/section";
 import { products } from "@/modules/catalog/data";
 import { RequestForm } from "@/modules/request/request-form";
 
-export const metadata: Metadata = { title: "Request Jastip" };
+export const metadata: Metadata = { title: "Request a Pair" };
 
 export default async function RequestPage(props: PageProps<"/request">) {
   const { item } = await props.searchParams;
@@ -11,8 +11,8 @@ export default async function RequestPage(props: PageProps<"/request">) {
 
   return (
     <Section
-      title="Request Jastip"
-      desc="Isi detail barangnya, estimasi biaya langsung kehitung di sebelah. Belum ada pembayaran di tahap ini — jastiper cek stok dulu ke JPO."
+      title="Request a Pair"
+      desc="Fill in the details and the cost estimate updates as you type. Nothing is paid at this stage — we check the stock in store first."
     >
       <RequestForm defaultItem={picked ? `${picked.brand} ${picked.name}` : ""} />
     </Section>
