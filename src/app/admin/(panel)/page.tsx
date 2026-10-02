@@ -24,7 +24,7 @@ export default async function AdminDashboardPage() {
           href="/admin/pesanan?status=baru"
           className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-paper hover:bg-accent-dark"
         >
-          {s.perStatus.baru} request baru
+          {s.perStatus.baru} menunggu cek harga
         </Link>
       </PageHeader>
 
@@ -35,9 +35,9 @@ export default async function AdminDashboardPage() {
           hint={`${s.aktif} masih jalan`}
         />
         <StatCard
-          eyebrow="Konversi selesai"
+          eyebrow="Konversi terbayar"
           value={`${s.konversi}%`}
-          hint={`${s.selesai} order selesai · target PRD ≥40%`}
+          hint={`${s.dibayar} request sudah lunas · target PRD ≥40%`}
         />
         <StatCard
           eyebrow="Omzet order selesai"
@@ -75,7 +75,7 @@ export default async function AdminDashboardPage() {
             {statuses.map(([key, count]) => (
               <li key={key} className="flex items-center gap-3 text-sm">
                 <span className={`h-2 w-2 shrink-0 rounded-full ${STATUS[key].dot}`} />
-                <span className="w-28 shrink-0 text-zinc-600">{STATUS[key].label}</span>
+                <span className="w-44 shrink-0 truncate text-zinc-600">{STATUS[key].label}</span>
                 <span className="h-1.5 flex-1 rounded-full bg-zinc-100">
                   <span
                     className={`block h-full rounded-full ${STATUS[key].dot}`}
@@ -87,8 +87,7 @@ export default async function AdminDashboardPage() {
             ))}
           </ul>
           <p className="mt-4 border-t border-zinc-100 pt-3 text-xs leading-relaxed text-zinc-500">
-            Selisih harga yang dikembalikan ke customer:{" "}
-            <span className="font-medium text-ink">{rupiah(s.refund)}</span>
+            Kuning = menunggu, hijau = lunas & seterusnya, merah = batal (PRD 7.4).
           </p>
         </div>
       </div>

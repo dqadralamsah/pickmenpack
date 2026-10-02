@@ -1,8 +1,8 @@
 const steps = [
   { title: "Pick & request", body: "Choose from the catalog or just describe the pair you want." },
-  { title: "See the estimate", body: "Fee and total show up instantly. Happy with it? Pay the deposit." },
-  { title: "We shop for it", body: "The pair is checked in person — stock, size, condition — and the net price confirmed." },
-  { title: "Final invoice", body: "You pay the actual price. Cheaper than the estimate? The difference is refunded." },
+  { title: "Get the exact price", body: "On Friday we check stock and price with the store, then send the final total on WhatsApp." },
+  { title: "Pay once, in full", body: "Transfer by Saturday 09.00. No deposit — and if you change your mind before paying, it's free." },
+  { title: "We shop & pack", body: "Saturday at the mall: checked in person, photographed, packed. Out of stock? Swap or full refund." },
   { title: "Get your pair", body: "COD around the service area, or insured courier for the rest of Indonesia." },
 ];
 

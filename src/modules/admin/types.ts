@@ -1,9 +1,13 @@
 import type { Delivery } from "../request/fee.ts";
 
-/** Alur order mengikuti PRD 4 (request → DP → dibeli → kirim → selesai). */
+/**
+ * Alur order PRD 5.5 (tanpa DP): request → admin cek harga → harga dikonfirmasi
+ * → customer transfer penuh → dibeli & dikemas → kirim → selesai.
+ */
 export type OrderStatus =
   | "baru"
-  | "dp"
+  | "dikonfirmasi"
+  | "dibayar"
   | "dibeli"
   | "dikirim"
   | "selesai"
@@ -17,13 +21,18 @@ export type Order = {
   kota: string;
   item: string;
   ukuran: string;
+  /** Panjang kaki (cm), opsional — mitigasi salah ukuran (Business Ops 5.2). */
+  kakiCm?: number;
   store: string;
-  /** Harga net perkiraan yang diisi customer di form request. */
+  referensi?: string;
+  /** Perkiraan harga barang yang diisi customer di form request. */
   estimasi: number;
-  /** Harga net aktual setelah barang dibeli di toko. null = belum dibeli. */
+  /** Harga net pasti hasil cek ke toko (Jumat). null = belum dicek. */
   netFinal: number | null;
   delivery: Delivery;
   status: OrderStatus;
+  /** Cutoff store run yang diikuti (ISO), PRD 5.8. */
+  storeRun?: string;
   catatan?: string;
 };
 
@@ -35,51 +44,23 @@ export type Settings = {
   accounts: { bank: string; nomor: string; atasNama: string }[];
 };
 
-/** Warna status konsisten dengan PRD 8: hijau selesai, kuning proses, merah batal. */
-export const STATUS: Record<
-  OrderStatus,
-  { label: string; badge: string; dot: string }
-> = {
-  baru: {
-    label: "Request baru",
-    badge: "bg-sky-50 text-sky-700 border-sky-200",
-    dot: "bg-sky-500",
-  },
-  dp: {
-    label: "DP masuk",
-    badge: "bg-amber-50 text-amber-700 border-amber-200",
-    dot: "bg-amber-500",
-  },
-  dibeli: {
-    label: "Dibeli di toko",
-    badge: "bg-violet-50 text-violet-700 border-violet-200",
-    dot: "bg-violet-500",
-  },
-  dikirim: {
-    label: "Dikirim / COD",
-    badge: "bg-indigo-50 text-indigo-700 border-indigo-200",
-    dot: "bg-indigo-500",
-  },
-  selesai: {
-    label: "Selesai",
-    badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    dot: "bg-emerald-500",
-  },
-  batal: {
-    label: "Batal",
-    badge: "bg-rose-50 text-rose-700 border-rose-200",
-    dot: "bg-rose-500",
-  },
+// PRD 7.4: kuning = menunggu/diproses, hijau = dikonfirmasi/selesai, merah = batal.
+const wait = { badge: "bg-amber-50 text-amber-800 border-amber-200", dot: "bg-amber-500" };
+const ok = { badge: "bg-emerald-50 text-emerald-800 border-emerald-200", dot: "bg-emerald-500" };
+
+export const STATUS: Record<OrderStatus, { label: string; badge: string; dot: string }> = {
+  baru: { label: "Menunggu cek harga", ...wait },
+  dikonfirmasi: { label: "Harga dikirim, tunggu transfer", ...wait },
+  dibayar: { label: "Lunas", ...ok },
+  dibeli: { label: "Dibeli & dikemas", ...ok },
+  dikirim: { label: "Dikirim / COD", ...ok },
+  selesai: { label: "Selesai", badge: "bg-emerald-600 text-white border-emerald-600", dot: "bg-emerald-700" },
+  batal: { label: "Batal", badge: "bg-rose-50 text-rose-800 border-rose-200", dot: "bg-rose-500" },
 };
 
-export const STATUS_FLOW: OrderStatus[] = [
-  "baru",
-  "dp",
-  "dibeli",
-  "dikirim",
-  "selesai",
-];
-
 /** Order yang masih jalan — dipakai buat KPI "order aktif". */
-export const isActive = (o: Order) =>
-  o.status !== "selesai" && o.status !== "batal";
+export const isActive = (o: Order) => o.status !== "selesai" && o.status !== "batal";
+
+/** PRD 8: konversi = request yang sudah dibayar (atau lebih lanjut). */
+export const isPaid = (o: Order) =>
+  o.status === "dibayar" || o.status === "dibeli" || o.status === "dikirim" || o.status === "selesai";

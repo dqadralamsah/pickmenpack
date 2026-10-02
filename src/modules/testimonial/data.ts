@@ -14,8 +14,8 @@ export const testimonials: Testimonial[] = [
     kota: "Tangerang",
     item: "Nike Revolution 7",
     pesan:
-      "The estimate was around Rp600k, and the store happened to run an extra discount. The difference came back without me asking. That is what earns trust.",
-    highlight: "Rp72,000 difference refunded",
+      "I got the exact price on Friday night, paid once on Saturday morning, and the pair arrived Sunday with photos of the box before packing. No chasing, no surprises.",
+    highlight: "Price confirmed before paying",
   },
   {
     nama: "Dinda P.",

@@ -8,7 +8,7 @@ export default function FaqPage() {
   return (
     <Section
       title="FAQ & Policy"
-      desc="How PickmenPack works: fees, deposits, refunds, timing, and how the price difference is settled."
+      desc="How PickmenPack works: fees, the weekly store run, payment, refunds and returns."
     >
       <FaqList />
     </Section>

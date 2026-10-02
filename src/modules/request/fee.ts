@@ -1,5 +1,6 @@
-// Skema fee Opsi A (PRD 2.4) — fee tetap bertingkat, dihitung dari harga NET
-// setelah semua diskon toko. Hasilnya rentang, bukan angka pasti (PRD 4).
+// Skema fee Opsi A (PRD 5.4) — fee bertingkat, dihitung dari harga NET setelah
+// semua diskon toko. Di form hasilnya rentang indikatif; harga final dikonfirmasi
+// admin sebelum customer transfer penuh (PRD 5.5, tanpa DP).
 
 export type Range = { min: number; max: number };
 
@@ -29,6 +30,21 @@ export function estimateTotal(netPrice: number, delivery: Delivery): Range {
   };
 }
 
-/** DP dihitung dari sisi atas estimasi (PRD 4: "Bayar DP Berdasar Estimasi Sisi Atas"). */
-export const DP_RATE = 0.5;
-export const dpAmount = (total: Range) => Math.ceil((total.max * DP_RATE) / 1000) * 1000;
+/**
+ * @deprecated PRD v1.0 5.8: harga per-item sesuai diskon toko, bukan proporsional.
+ * Cuma dipakai `home/group-buy.tsx` (tidak lagi dipasang di halaman) — hapus bareng file itu.
+ *
+ * Diskon kolektif (PRD 2.6): potongan tier "minimum belanja" yang didapat dari
+ * satu transaksi gabungan, dibagi proporsional ke tiap pesanan yang ikut.
+ * Sisa pembulatan dibebankan ke pesanan terbesar supaya total alokasi persis
+ * sama dengan potongan yang didapat di kasir.
+ */
+export function allocateGroupDiscount(netPrices: number[], discount: number): number[] {
+  const total = netPrices.reduce((a, b) => a + b, 0);
+  if (total <= 0 || discount <= 0) return netPrices.map(() => 0);
+
+  const shares = netPrices.map((n) => Math.round((n / total) * discount));
+  const drift = discount - shares.reduce((a, b) => a + b, 0);
+  shares[netPrices.indexOf(Math.max(...netPrices))] += drift;
+  return shares;
+}

@@ -34,9 +34,9 @@ const slides: Slide[] = [
     tone: "from-accent-dark via-accent to-zinc-800",
   },
   {
-    eyebrow: "Flat fee",
-    title: "Rp25k per pair, difference refunded",
-    desc: "Never a percentage. You see the total before you pay anything.",
+    eyebrow: "No deposit",
+    title: "Check first, pay once",
+    desc: "Fee from Rp25k. We confirm the exact price before you pay anything.",
     cta: "Get an estimate",
     href: "/request",
     tone: "from-zinc-700 via-zinc-800 to-zinc-900",

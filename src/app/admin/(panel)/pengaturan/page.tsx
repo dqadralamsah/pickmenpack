@@ -3,7 +3,7 @@ import { rupiah } from "@/lib/format";
 import { saveSettingsAction } from "@/modules/admin/actions";
 import { getSettings } from "@/modules/admin/store";
 import { PageHeader, btnPrimary, card, field, label } from "@/modules/admin/ui";
-import { DP_RATE, ONGKIR, estimateFee } from "@/modules/request/fee";
+import { ONGKIR, estimateFee } from "@/modules/request/fee";
 
 export const metadata: Metadata = { title: "Pengaturan" };
 
@@ -121,19 +121,20 @@ export default async function AdminPengaturanPage() {
             </span>
           </li>
           <li className="flex justify-between gap-4">
-            <span className="text-zinc-600">DP</span>
-            <span className="font-medium">
-              {DP_RATE * 100}% dari sisi atas estimasi
-            </span>
+            <span className="text-zinc-600">Pembayaran</span>
+            <span className="text-right font-medium">Penuh setelah harga dikonfirmasi, tanpa DP</span>
+          </li>
+          <li className="flex justify-between gap-4">
+            <span className="text-zinc-600">Jadwal</span>
+            <span className="text-right font-medium">Cutoff Kam 23.59 · bayar Sab 09.00 · kirim Min/Sen</span>
           </li>
         </ul>
       </div>
 
       <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-800">
-        Data panel ini masih dummy dan disimpan di memori server — perubahan hilang
-        tiap server restart. Tinggal ganti isi fungsi di{" "}
-        <code className="font-mono">modules/admin/store.ts</code> ke query database
-        saat siap.
+        Data tersimpan di SQLite (<code className="font-mono">DB_PATH</code>, default{" "}
+        <code className="font-mono">data/pickmenpack.db</code>). Di production, mount folder
+        itu sebagai volume Docker supaya data gak hilang saat container dibuat ulang.
       </p>
     </>
   );

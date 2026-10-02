@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     template: `%s · ${site.brand}`,
   },
   description:
-    "We buy your sneakers at the official store and hand them over. Flat tiered fee, transparent estimate, price difference always refunded.",
+    "We buy your sneakers, slides and apparel at the official store and hand them over. Exact price confirmed before you pay, no deposit, weekly store run.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#e2571e",
+  themeColor: "#c2410c",
   viewportFit: "cover",
 };
 

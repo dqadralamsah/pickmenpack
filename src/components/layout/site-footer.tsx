@@ -17,6 +17,7 @@ export function SiteFooter() {
             <li><Link href="/request" className="hover:text-accent">Request a Pair</Link></li>
             <li><Link href="/cara-bayar" className="hover:text-accent">How to Pay</Link></li>
             <li><Link href="/faq" className="hover:text-accent">FAQ &amp; Policy</Link></li>
+            <li><Link href="/privacy" className="hover:text-accent">Privacy Policy</Link></li>
           </ul>
         </div>
 

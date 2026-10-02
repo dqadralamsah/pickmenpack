@@ -4,6 +4,7 @@ import { Hero, WhyUs } from "@/modules/home/hero";
 import { HeroSlider } from "@/modules/home/slider";
 import { Collections, BrandFocus } from "@/modules/home/collections";
 import { HowItWorks } from "@/modules/home/how-it-works";
+import { StoreRunRules, StoreRunSchedule } from "@/modules/home/store-run";
 import { products } from "@/modules/catalog/data";
 import { ProductGrid } from "@/modules/catalog/product-grid";
 import { TestimonialList } from "@/modules/testimonial/testimonial-list";
@@ -42,11 +43,19 @@ export default function Home() {
         <ProductGrid products={products.slice(0, 6)} />
       </Section>
 
+      <Section
+        title="One store run, every week"
+        desc="Requests are collected through the week and bought in a single Saturday trip to the mall. You always know when you'll hear from us and when your pair ships."
+      >
+        <StoreRunSchedule />
+        <StoreRunRules />
+      </Section>
+
       <Section title="Why it works both ways" desc="Four things that keep this fair for you and sustainable for us.">
         <WhyUs />
       </Section>
 
-      <Section title="How it works" desc="Five steps, no back-and-forth chat just to find out the total.">
+      <Section title="How it works" desc="Check first, pay once. You never pay before the exact price is confirmed.">
         <HowItWorks />
       </Section>
 
@@ -67,7 +76,7 @@ export default function Home() {
               Got a pair in mind?
             </h2>
             <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-zinc-600">
-              Describe it, see the estimate right away, then decide.
+              Describe it, see the estimate right away. You only pay once the exact price is confirmed.
             </p>
             <Link
               href="/request"

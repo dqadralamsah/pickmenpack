@@ -3,14 +3,15 @@ import { site } from "@/lib/site";
 
 const quick = [
   ["Service fee", "from Rp25k"],
-  ["Price difference", "100% refunded"],
-  ["Reply time", "< 2 hours"],
+  ["Deposit", "none — pay once"],
+  ["Exact price", "every Friday"],
+  ["Cancel before paying", "free"],
   ["COD area", site.serviceArea],
 ];
 
 const trust = [
   "Bought at official stores",
-  "Fee from Rp25k",
+  "Price confirmed before you pay",
   `COD ${site.serviceArea}`,
   "Insured nationwide shipping",
 ];
@@ -34,9 +35,10 @@ export function Hero() {
             </h1>
 
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-600 sm:mt-7 sm:text-base">
-              {site.brand} walks into the store for you — the pair is checked in
-              person, the fee is fixed before we buy, and any price difference
-              comes straight back to you. No long chat just to learn the total.
+              {site.brand} walks into the store for you. We check stock and the
+              exact price first, you pay once in full, and only then do we buy —
+              checked in person, packed with photos. No deposit, no surprise
+              top-ups.
             </p>
 
             <div className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
@@ -81,23 +83,23 @@ export function Hero() {
   );
 }
 
-/** Empat titik yang menguntungkan dua sisi — customer dan jastipernya. */
+/** Nilai jual (PRD 1.1, 5.3–5.5) — store run mingguan punya section sendiri. */
 const winWin = [
   {
-    title: "Flat fee, never a percentage",
-    body: "The fee is locked to a price bracket, not to how expensive the shoe is — so the cost is known before we buy.",
+    title: "Bought at the official counter",
+    body: "We walk into the brand's own store at the mall. Size, condition and authenticity are checked by hand before anything is packed.",
   },
   {
-    title: "The price difference goes back",
-    body: "If the register rings up lower than the estimate, the rest returns to you instead of quietly becoming margin.",
+    title: "A clear, tiered fee",
+    body: "From Rp25k per item, based on the net price after store discounts. You see the fee range up front and the exact amount before you pay.",
   },
   {
-    title: "Deposit first, settle on the invoice",
-    body: "Half up front, the rest once the real receipt total is in. You only settle what was actually paid at the counter.",
+    title: "Check first, pay once",
+    body: "No deposit. We confirm stock and the exact price with the store, you transfer once, then we buy. Cancel before paying and it costs nothing.",
   },
   {
-    title: "One store run, many orders",
-    body: "Requests are batched into the same trip instead of one trip per pair, and the saving shows up in your fee.",
+    title: "Insured all the way to your door",
+    body: "J&T Express with cover up to Rp20 million and shoe-specific packing, so a pair worth more than a million still travels safely.",
   },
 ];
 

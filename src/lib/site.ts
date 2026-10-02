@@ -4,7 +4,7 @@ export const site = {
   tagline: "Personal shopper for sneakers, straight from official stores",
   waNumber: "6281234567890", // dummy
   instagram: "@pickmenpack",
-  hours: "Every day, 10.00–20.00 WIB",
+  hours: "WhatsApp replies 19.00–21.00 WIB",
   serviceArea: "Tangerang – Jakarta",
 };
 

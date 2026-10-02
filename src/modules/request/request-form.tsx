@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useActionState, useState } from "react";
+import Link from "next/link";
 import { rupiah } from "@/lib/format";
-import { site, waLink } from "@/lib/site";
-import { estimateFee, estimateTotal, dpAmount, ONGKIR, type Delivery } from "./fee";
+import { site } from "@/lib/site";
+import { submitRequestAction, type RequestState } from "./actions";
+import { estimateFee, estimateTotal, ONGKIR, type Delivery } from "./fee";
+import { nextStoreRun, runDay, runTime } from "./store-run";
 
 // text-base (16px) wajib di mobile — di bawah itu Safari iOS auto-zoom saat input difokus.
 const field =
-  "w-full rounded-xl border border-zinc-300 px-3.5 py-3 text-base outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20 sm:text-sm";
+  "w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3 text-base outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/25 aria-[invalid=true]:border-rose-500 sm:text-sm";
 const label = "mb-1.5 block text-sm font-medium";
 
 const sizePreset = ["38", "39", "40", "41", "42", "43", "44"];
@@ -15,66 +18,83 @@ const sizePreset = ["38", "39", "40", "41", "42", "43", "44"];
 const range = (r: { min: number; max: number }) =>
   r.min === r.max ? rupiah(r.min) : `${rupiah(r.min)} – ${rupiah(r.max)}`;
 
-export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
+/** Pesan error di bawah field, dihubungkan lewat aria-describedby. */
+function FieldError({ id, msg }: { id: string; msg?: string }) {
+  return msg ? (
+    <p id={`${id}-err`} className="mt-1.5 text-xs font-medium text-rose-700">
+      {msg}
+    </p>
+  ) : null;
+}
+
+export function RequestForm({ defaultItem = "", waNumber }: { defaultItem?: string; waNumber: string }) {
   const [item, setItem] = useState(defaultItem);
   const [size, setSize] = useState("");
   const [price, setPrice] = useState("");
   const [delivery, setDelivery] = useState<Delivery>("cod");
-  const [sent, setSent] = useState<string | null>(null);
+  const [state, action, pending] = useActionState<RequestState, FormData>(submitRequestAction, null);
+  const [another, setAnother] = useState(false);
 
   const netPrice = Number(price) || 0;
   const fee = estimateFee(netPrice);
   const total = estimateTotal(netPrice, delivery);
-  const dp = dpAmount(total);
+  const err: Partial<Record<string, string>> = (state && !state.ok && state.errors) || {};
+  const a11y = (k: string) =>
+    err[k] ? { "aria-invalid": true, "aria-describedby": `${k}-err` } : {};
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const f = new FormData(e.currentTarget);
-    const pesan = [
-      `Hi ${site.brand}, I'd like you to buy this for me:`,
-      `Name: ${f.get("nama")}`,
-      `Item: ${f.get("item")}`,
-      `Size: ${f.get("ukuran")}`,
-      `Estimated price: ${rupiah(netPrice)}`,
-      `Delivery: ${delivery === "cod" ? `COD ${site.serviceArea}` : "Courier, out of town"}`,
-      f.get("referensi") ? `Reference: ${f.get("referensi")}` : "",
-      f.get("catatan") ? `Notes: ${f.get("catatan")}` : "",
-      `Estimated total: ${range(total)}`,
-      `Deposit (50% of upper estimate): ${rupiah(dp)}`,
-    ]
-      .filter(Boolean)
-      .join("\n");
-    setSent(pesan);
-  }
-
-  if (sent) {
+  if (state?.ok && !another) {
+    const run = nextStoreRun(new Date(state.cutoff));
+    const wa = `https://wa.me/${waNumber}?text=${encodeURIComponent(
+      `Hi ${site.brand}, I just sent request ${state.id} (${item}, size ${size}).`,
+    )}`;
     return (
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-        <p className="eyebrow">Step 2 of 2</p>
-        <h2 className="mt-3 text-2xl font-semibold">
-          Your request is ready
-        </h2>
+      <div className="mx-auto max-w-2xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8" role="status">
+        <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800">
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden />
+          Waiting for admin confirmation
+        </span>
+        <h2 className="mt-4 text-2xl font-semibold">Request received</h2>
         <p className="mt-2 text-sm leading-relaxed text-zinc-600">
-          Last step: send this summary over WhatsApp so we can check stock and
-          size at the store. Nothing is paid until availability is confirmed.
+          Your request ID is <span className="font-mono font-semibold text-ink">{state.id}</span>.
+          Nothing to pay yet — we check stock and the exact price with the store
+          first, then send you the final price over WhatsApp.
         </p>
-        <pre className="mt-4 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-50 p-4 font-sans text-xs leading-relaxed whitespace-pre-wrap text-zinc-700">
-          {sent}
-        </pre>
-        <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
+
+        <ol className="mt-6 divide-y divide-zinc-100 rounded-xl border border-zinc-200 text-sm">
+          {[
+            ["Request cutoff", `${runDay(run.cutoff)}, ${runTime(run.cutoff)} WIB`],
+            ["Final price sent to you", `${runDay(run.quote)}, evening`],
+            ["Transfer in full by", `${runDay(run.payBy)}, ${runTime(run.payBy)} WIB`],
+            ["We shop, check & pack", runDay(run.shop)],
+            ["Shipped / COD", `${runDay(run.ship)} — Monday at the latest`],
+          ].map(([k, v]) => (
+            <li key={k} className="flex items-baseline justify-between gap-4 px-4 py-3">
+              <span className="text-zinc-500">{k}</span>
+              <span className="text-right font-medium">{v}</span>
+            </li>
+          ))}
+        </ol>
+
+        <p className="mt-4 rounded-xl bg-accent-soft px-4 py-3 text-xs leading-relaxed text-zinc-700">
+          Please double-check your size: <strong>wrong-size items can&rsquo;t be returned or exchanged</strong>.
+          We send the brand&rsquo;s official size chart together with your final price.
+        </p>
+
+        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
           <a
-            href={waLink(sent)}
+            href={wa}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-emerald-700 px-5 py-3.5 text-center text-sm font-medium text-white active:scale-[.98] sm:py-2.5 sm:hover:bg-emerald-700"
+            className="rounded-full bg-accent px-5 py-3.5 text-center text-sm font-medium text-paper transition-colors hover:bg-accent-dark sm:py-2.5"
           >
-            Send via WhatsApp
+            Ask something on WhatsApp
           </a>
           <button
-            onClick={() => setSent(null)}
-            className="rounded-full border border-zinc-300 bg-white px-5 py-3.5 text-sm font-medium active:bg-zinc-50 sm:py-2.5"
+            type="button"
+            onClick={() => setAnother(true)}
+            className="cursor-pointer rounded-full border border-zinc-300 bg-white px-5 py-3.5 text-sm font-medium transition-colors hover:bg-zinc-50 sm:py-2.5"
           >
-            Edit request
+            Send another request
           </button>
         </div>
       </div>
@@ -82,21 +102,28 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 lg:grid-cols-[1fr_21rem] lg:gap-6">
-      <div className="space-y-5 rounded-2xl border border-zinc-200 p-4 sm:p-5">
+    <form
+      // onSubmit, bukan `action` prop: action prop me-reset field kalau validasi gagal.
+      onSubmit={(e) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        setAnother(false);
+        startTransition(() => action(f));
+      }}
+      noValidate
+      className="grid gap-5 lg:grid-cols-[1fr_21rem] lg:gap-6"
+    >
+      <div className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-5">
+        {/* Honeypot — tersembunyi dari manusia & screen reader. */}
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={label} htmlFor="nama">
               Name
             </label>
-            <input
-              id="nama"
-              name="nama"
-              required
-              autoComplete="name"
-              className={field}
-              placeholder="Your name"
-            />
+            <input id="nama" name="nama" required autoComplete="name" className={field} placeholder="Your name" {...a11y("nama")} />
+            <FieldError id="nama" msg={err.nama} />
           </div>
           <div>
             <label className={label} htmlFor="wa">
@@ -109,11 +136,28 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
               inputMode="tel"
               autoComplete="tel"
               required
-              pattern="[0-9+ ]{9,16}"
               className={field}
               placeholder="08xxxxxxxxxx"
+              {...a11y("wa")}
             />
+            <FieldError id="wa" msg={err.wa} />
           </div>
+        </div>
+
+        <div>
+          <label className={label} htmlFor="kota">
+            City
+          </label>
+          <input
+            id="kota"
+            name="kota"
+            required
+            autoComplete="address-level2"
+            className={field}
+            placeholder="e.g. Tangerang"
+            {...a11y("kota")}
+          />
+          <FieldError id="kota" msg={err.kota} />
         </div>
 
         <div>
@@ -128,7 +172,9 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             onChange={(e) => setItem(e.target.value)}
             className={field}
             placeholder="e.g. Nike Revolution 7"
+            {...a11y("item")}
           />
+          <FieldError id="item" msg={err.item} />
         </div>
 
         <div>
@@ -140,11 +186,12 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
               <button
                 key={u}
                 type="button"
+                aria-pressed={size === u}
                 onClick={() => setSize(u)}
-                className={`h-11 w-11 shrink-0 rounded-xl border text-sm font-medium transition-colors ${
+                className={`h-11 w-11 shrink-0 cursor-pointer rounded-xl border text-sm font-medium transition-colors ${
                   size === u
                     ? "border-accent bg-accent text-paper"
-                    : "border-zinc-200 text-zinc-600 active:bg-zinc-100"
+                    : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 active:bg-zinc-100"
                 }`}
               >
                 {u}
@@ -159,15 +206,38 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             onChange={(e) => setSize(e.target.value)}
             className={field}
             placeholder="Or type another size (e.g. 37.5 / US 9)"
+            {...a11y("ukuran")}
           />
+          <FieldError id="ukuran" msg={err.ukuran} />
+          <div className="mt-3 flex items-center gap-3">
+            <label htmlFor="kakiCm" className="text-xs text-zinc-600">
+              Foot length <span className="text-zinc-500">(optional, helps us check the fit)</span>
+            </label>
+            <div className="relative w-28 shrink-0">
+              <input
+                id="kakiCm"
+                name="kakiCm"
+                type="number"
+                inputMode="decimal"
+                step={0.5}
+                min={15}
+                max={35}
+                className={`${field} pr-10`}
+                placeholder="26.5"
+              />
+              <span className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-xs text-zinc-500">
+                cm
+              </span>
+            </div>
+          </div>
         </div>
 
         <div>
           <label className={label} htmlFor="harga">
-            Estimated item price
+            Rough item price
           </label>
           <div className="relative">
-            <span className="absolute top-1/2 left-3.5 -translate-y-1/2 text-base text-zinc-400 sm:text-sm">
+            <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-base text-zinc-500 sm:text-sm">
               Rp
             </span>
             <input
@@ -182,17 +252,19 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
               onChange={(e) => setPrice(e.target.value)}
               className={`${field} pl-11`}
               placeholder="750000"
+              {...a11y("harga")}
             />
           </div>
+          <FieldError id="harga" msg={err.harga} />
           <p className="mt-1.5 text-xs text-zinc-500">
-            A rough store price is enough — the exact number is confirmed once
-            we check it in person.
+            A number from the catalog range is enough — we check the exact price
+            with the store and confirm it before you pay anything.
           </p>
         </div>
 
         <div>
           <label className={label} htmlFor="referensi">
-            Reference link <span className="text-zinc-400">(optional)</span>
+            Reference link <span className="font-normal text-zinc-500">(optional)</span>
           </label>
           <input
             id="referensi"
@@ -209,16 +281,14 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
           <div className="grid gap-2.5 sm:grid-cols-2">
             {(
               [
-                ["cod", `COD ${site.serviceArea}`, "Free delivery, handed over in person"],
-                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T`],
+                ["cod", `COD ${site.serviceArea}`, "Free, handed over in person"],
+                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, insured`],
               ] as const
             ).map(([value, title, note]) => (
               <label
                 key={value}
-                className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-sm transition-colors ${
-                  delivery === value
-                    ? "border-brand bg-brand-soft"
-                    : "border-zinc-200 active:bg-zinc-50"
+                className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent/40 ${
+                  delivery === value ? "border-accent bg-accent-soft" : "border-zinc-200 hover:border-zinc-400"
                 }`}
               >
                 <input
@@ -230,8 +300,9 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
                   className="sr-only"
                 />
                 <span
+                  aria-hidden
                   className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-[5px] transition-colors ${
-                    delivery === value ? "border-brand" : "border-zinc-300"
+                    delivery === value ? "border-accent" : "border-zinc-300"
                   }`}
                 />
                 <span>
@@ -245,7 +316,7 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
 
         <div>
           <label className={label} htmlFor="catatan">
-            Notes <span className="text-zinc-400">(optional)</span>
+            Notes <span className="font-normal text-zinc-500">(optional)</span>
           </label>
           <textarea
             id="catatan"
@@ -254,6 +325,26 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
             className={field}
             placeholder="Colour, backup size, anything else."
           />
+        </div>
+
+        <div>
+          <label className="flex cursor-pointer items-start gap-3 text-sm">
+            <input
+              type="checkbox"
+              name="consent"
+              className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-accent"
+              {...a11y("consent")}
+            />
+            <span className="text-zinc-600">
+              I agree that {site.brand} stores my name, WhatsApp number and city to
+              process this request, as described in the{" "}
+              <Link href="/privacy" className="font-medium text-accent underline underline-offset-2">
+                privacy policy
+              </Link>
+              .
+            </span>
+          </label>
+          <FieldError id="consent" msg={err.consent} />
         </div>
       </div>
 
@@ -272,32 +363,33 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
           </div>
           <div className="flex justify-between gap-3">
             <dt className="text-zinc-500">Shipping + packing</dt>
-            <dd className="text-right">
-              {delivery === "cod" ? "Free" : range(ONGKIR.kirim)}
-            </dd>
+            <dd className="text-right">{delivery === "cod" ? "Free" : range(ONGKIR.kirim)}</dd>
           </div>
           <div className="flex justify-between gap-3 border-t border-zinc-200 pt-2 font-semibold">
             <dt>Estimated total</dt>
             <dd className="text-right">{netPrice ? range(total) : "—"}</dd>
           </div>
-          <div className="flex justify-between gap-3 text-brand">
-            <dt className="font-medium">Deposit 50% (upper estimate)</dt>
-            <dd className="font-semibold">{netPrice ? rupiah(dp) : "—"}</dd>
-          </div>
         </dl>
 
         <p className="text-xs leading-relaxed text-zinc-500">
-          The fee is based on the <strong>final net price</strong> after every
-          store discount. The numbers above are still a range — the final invoice
-          comes after the pair is actually bought, and anything cheaper is
-          refunded.
+          An <strong>indicative range</strong>. The fee follows the final net price
+          after store discounts. We confirm the exact total before you pay, then
+          you transfer once, in full — no deposit. Cancelling before you transfer
+          costs nothing.
         </p>
+
+        {Object.keys(err).length > 0 && (
+          <p role="alert" className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-medium text-rose-800">
+            A few fields need a look — see the messages in red.
+          </p>
+        )}
 
         <button
           type="submit"
-          className="hidden w-full rounded-full bg-accent px-4 py-3 text-sm font-medium text-paper hover:bg-accent-dark lg:block"
+          disabled={pending}
+          className="hidden w-full cursor-pointer rounded-full bg-accent px-4 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent-dark disabled:cursor-wait disabled:opacity-70 lg:block"
         >
-          Send request
+          {pending ? "Sending…" : "Send request"}
         </button>
       </aside>
 
@@ -305,15 +397,14 @@ export function RequestForm({ defaultItem = "" }: { defaultItem?: string }) {
       <div className="fixed inset-x-3 bottom-[4.75rem] z-40 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-paper/95 p-3 shadow-xl backdrop-blur lg:hidden">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] text-zinc-500">Estimated total</p>
-          <p className="truncate text-sm font-bold">
-            {netPrice ? range(total) : "Add a price first"}
-          </p>
+          <p className="truncate text-sm font-bold">{netPrice ? range(total) : "Add a price first"}</p>
         </div>
         <button
           type="submit"
-          className="shrink-0 rounded-full bg-accent px-5 py-3 text-sm font-medium text-paper transition-transform active:scale-[.98]"
+          disabled={pending}
+          className="shrink-0 cursor-pointer rounded-full bg-accent px-5 py-3 text-sm font-medium text-paper transition-transform active:scale-[.98] disabled:opacity-70"
         >
-          Send request
+          {pending ? "Sending…" : "Send request"}
         </button>
       </div>
     </form>

@@ -4,7 +4,7 @@ import { rupiah } from "@/lib/format";
 import type { Product } from "./data";
 
 /** Tanpa border & tanpa kotak — latar gambar ikut latar web. Field-nya cuma
- *  brand + nama dan dua harga; sisanya baru muncul di halaman detail/request. */
+ *  brand + nama dan rentang harga; sisanya baru muncul di halaman detail/request. */
 export function ProductCard({ product }: { product: Product }) {
   const habis = product.stock === "habis";
 
@@ -26,7 +26,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
         {habis && (
           <span className="eyebrow absolute inset-x-0 bottom-0 bg-paper/85 py-1.5 text-center">
-            Habis
+            Sold out
           </span>
         )}
       </div>
@@ -34,12 +34,13 @@ export function ProductCard({ product }: { product: Product }) {
       <h3 className="mt-3 truncate text-[13px] font-medium">
         {product.brand} — {product.name}
       </h3>
-      <div className="mt-1 flex items-baseline gap-2">
-        <span className="text-sm font-semibold">{rupiah(product.pricePromo)}</span>
-        <span className="text-xs text-zinc-400 line-through">
-          {rupiah(product.priceOriginal)}
-        </span>
-      </div>
+      {/* PRD 5.5: rentang harga — angka pasti dikirim setelah dicek ke toko. */}
+      <p className="mt-1 text-sm font-semibold">
+        {rupiah(product.pricePromo)}
+        {product.priceOriginal > product.pricePromo && (
+          <span className="font-normal text-zinc-500"> – {rupiah(product.priceOriginal)}</span>
+        )}
+      </p>
     </>
   );
 

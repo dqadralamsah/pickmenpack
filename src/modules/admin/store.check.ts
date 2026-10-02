@@ -1,13 +1,17 @@
-// node --experimental-strip-types src/modules/admin/store.check.ts
+// DB_PATH=:memory: node --experimental-strip-types src/modules/admin/store.check.ts
 import assert from "node:assert/strict";
-import {
+process.env.DB_PATH ??= ":memory:";
+const {
   faqDb,
   getStats,
   listOrders,
   orderMoney,
   productDb,
   updateOrder,
-} from "./store.ts";
+  createOrder,
+  getSettings,
+  saveSettings,
+} = await import("./store.ts");
 
 // filter status & pencarian
 assert.equal((await listOrders({ status: "semua" })).length, 16);
@@ -19,32 +23,42 @@ assert.equal((await listOrders({ q: "PMP-0814" })).length, 2);
 const urut = await listOrders();
 assert.ok(urut[0].createdAt >= urut.at(-1)!.createdAt);
 
-// uang: sebelum dibeli pakai estimasi, sesudah dibeli pakai harga net aktual
+// uang: sebelum dicek pakai estimasi, sesudah dicek pakai harga net pasti
 const belum = (await listOrders({ q: "PMP-0821-016" }))[0];
 assert.equal(orderMoney(belum).net, belum.estimasi);
-assert.equal(orderMoney(belum).selisih, 0);
+assert.equal(orderMoney(belum).confirmed, false);
 
 const sudah = (await listOrders({ q: "PMP-0819-012" }))[0];
 assert.equal(orderMoney(sudah).net, 612_000);
-assert.equal(orderMoney(sudah).selisih, -48_000); // lebih murah → balikin ke customer
-// DP tetap dihitung dari estimasi awal, bukan harga net final
-assert.equal(orderMoney(sudah).dp, orderMoney({ ...sudah, netFinal: null }).dp);
+assert.equal(orderMoney(sudah).confirmed, true);
 
 // update order kebaca di listing berikutnya
-await updateOrder("PMP-0821-016", { status: "dp", netFinal: 520_000 });
+await updateOrder("PMP-0821-016", { status: "dikonfirmasi", netFinal: 520_000 });
 const after = (await listOrders({ q: "PMP-0821-016" }))[0];
-assert.equal(after.status, "dp");
-assert.equal(orderMoney(after).selisih, -19_000);
+assert.equal(after.status, "dikonfirmasi");
+assert.equal(orderMoney(after).net, 520_000);
 
-// stats ikut berubah, dan sebaran status selalu berjumlah total
+// stats: sebaran status selalu berjumlah total, konversi = terbayar / total (PRD 8)
 const s = await getStats();
-assert.equal(
-  Object.values(s.perStatus).reduce((a, b) => a + b, 0),
-  s.total,
-);
-assert.equal(s.perStatus.dp, 3);
+assert.equal(Object.values(s.perStatus).reduce((a, b) => a + b, 0), s.total);
+assert.equal(s.perStatus.dikonfirmasi, 2);
 assert.equal(s.harian.length, 7);
-assert.equal(s.konversi, Math.round((s.selesai / s.total) * 100));
+assert.equal(s.konversi, Math.round((s.dibayar / s.total) * 100));
+
+// request dari form publik masuk sebagai "baru", tampil paling atas, ID urut per hari
+const a = await createOrder({ nama: "Tes", wa: "0812", kota: "Tangerang", item: "Nike", ukuran: "42", store: "-", estimasi: 600_000, delivery: "cod" });
+const b = await createOrder({ nama: "Tes 2", wa: "0813", kota: "Bandung", item: "Vans", ukuran: "40", store: "-", estimasi: 700_000, delivery: "kirim" });
+assert.equal(a.status, "baru");
+assert.equal(a.netFinal, null);
+assert.match(a.id, /^PMP-\d{4}-\d{3}$/);
+assert.notEqual(a.id, b.id);
+assert.equal((await listOrders())[0].id, b.id);
+assert.equal((await listOrders({ status: "semua" })).length, 18);
+
+// settings tersimpan
+await saveSettings({ waNumber: "6280000000000" });
+assert.equal((await getSettings()).waNumber, "6280000000000");
+assert.equal((await getSettings()).accounts.length, 3);
 
 // collection: save = upsert, remove = hapus
 const jumlahAwal = (await productDb.list()).length;
