@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { loginAction } from "@/modules/admin/actions";
 import { isLoggedIn } from "@/modules/admin/auth";
-import { btnPrimary, field, label } from "@/modules/admin/ui";
+import { btnPrimary, field, label } from "@/lib/ui";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export default async function AdminLoginPage({
     <div className="flex min-h-screen items-center justify-center bg-ink px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent font-mono text-xs font-medium text-paper">
+          <span className="flex h-11 w-11 items-center justify-center rounded-md bg-ink font-mono text-xs font-medium text-paper">
             {site.short}
           </span>
           <span className="leading-tight text-paper">

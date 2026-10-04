@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import { rupiah } from "@/lib/format";
 import { deleteProductAction, saveProductAction } from "@/modules/admin/actions";
 import { productDb, type ProductItem } from "@/modules/admin/store";
+import { PageHeader } from "@/components/shared/page-header";
+import { Chevron } from "@/components/shared/chevron";
 import {
-  PageHeader,
   btnDanger,
   btnPrimary,
   card,
+  disclosureBody,
   field,
   label,
-} from "@/modules/admin/ui";
+  summaryRow,
+} from "@/lib/ui";
 import { discountPercent } from "@/modules/catalog/data";
 
 export const metadata: Metadata = { title: "Katalog" };
@@ -146,9 +149,18 @@ export default async function AdminKatalogPage() {
         desc={`${items.length} item tampil di halaman katalog publik.`}
       />
 
-      <details className={`${card} mb-4 p-4 sm:p-5`}>
-        <summary className="cursor-pointer text-sm font-medium list-none [&::-webkit-details-marker]:hidden">
-          + Tambah produk baru
+      <details className={`${card} group mb-4 p-4 sm:p-5`}>
+        <summary className="flex list-none items-center justify-between gap-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
+          <span className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-paper"
+            >
+              +
+            </span>
+            Tambah produk baru
+          </span>
+          <Chevron />
         </summary>
         <div className="mt-4">
           <ProductForm />
@@ -158,7 +170,7 @@ export default async function AdminKatalogPage() {
       <div className="space-y-2">
         {items.map((p) => (
           <details key={p.id} className={`${card} overflow-hidden`}>
-            <summary className="flex cursor-pointer flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3.5 list-none [&::-webkit-details-marker]:hidden sm:px-5">
+            <summary className={`${summaryRow} flex-wrap`}>
               <span
                 className={`h-10 w-10 shrink-0 rounded-lg bg-gradient-to-br ${p.accent}`}
               />
@@ -166,17 +178,17 @@ export default async function AdminKatalogPage() {
                 <span className="block truncate text-sm font-medium">
                   {p.brand} {p.name}
                 </span>
-                <span className="block truncate text-xs text-zinc-500">
+                <span className="block truncate text-xs text-zinc-600">
                   {p.store} · ukuran {p.sizes.join("/") || "—"}
                 </span>
               </span>
               <span className="text-right text-sm">
                 <span className="block font-medium">{rupiah(p.pricePromo)}</span>
-                <span className="block text-xs text-zinc-400 line-through">
+                <span className="block text-xs text-zinc-600 line-through">
                   {rupiah(p.priceOriginal)}
                 </span>
               </span>
-              <span className="rounded-full bg-accent-soft px-2 py-1 text-xs font-medium text-accent">
+              <span className="rounded-full bg-accent-soft px-2 py-1 text-xs font-medium text-accent-dark">
                 -{discountPercent(p)}%
               </span>
               <span
@@ -184,9 +196,10 @@ export default async function AdminKatalogPage() {
               >
                 {stockLabel[p.stock]}
               </span>
+              <Chevron />
             </summary>
 
-            <div className="border-t border-zinc-100 bg-zinc-50/60 px-4 py-4 sm:px-5">
+            <div className={disclosureBody}>
               <ProductForm p={p} />
               <form action={deleteProductAction} className="mt-3">
                 <input type="hidden" name="id" value={p.id} />

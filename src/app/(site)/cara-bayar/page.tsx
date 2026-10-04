@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
-import { Section } from "@/components/layout/section";
-import { StoreRunSchedule } from "@/modules/home/store-run";
-import { PaymentInfo } from "@/modules/payment/payment-info";
+import { PageHero, Section } from "@/components/layout/section";
+import { StoreRunSchedule } from "@/modules/home/components/store-run";
+import { PaymentInfo } from "@/modules/payment/components/payment-info";
 
 export const metadata: Metadata = { title: "How to Pay" };
 
 export default function CaraBayarPage() {
   return (
-    <Section
-      title="How to Pay"
-      desc="Bank transfer or QRIS, once and in full — but only after we've confirmed stock and the exact price with you. No deposit."
-    >
-      <PaymentInfo />
-      <h2 className="mt-12 mb-4 text-lg font-semibold">This week&rsquo;s schedule</h2>
-      <StoreRunSchedule />
-    </Section>
+    <>
+      <PageHero
+        eyebrow="Bank transfer or QRIS · no deposit"
+        title="How to pay"
+        desc="Once and in full — but only after we've confirmed stock and the exact price with you."
+      />
+      <Section className="!pt-6">
+        <PaymentInfo />
+      </Section>
+      <Section eyebrow="This week" title="Schedule" className="!pt-0">
+        <StoreRunSchedule />
+      </Section>
+    </>
   );
 }

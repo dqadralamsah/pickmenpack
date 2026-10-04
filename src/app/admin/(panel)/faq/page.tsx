@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { deleteFaqAction, saveFaqAction } from "@/modules/admin/actions";
 import { faqDb, type FaqItem } from "@/modules/admin/store";
+import { PageHeader } from "@/components/shared/page-header";
+import { Chevron } from "@/components/shared/chevron";
 import {
-  PageHeader,
   btnDanger,
   btnPrimary,
   card,
+  disclosureBody,
   field,
   label,
-} from "@/modules/admin/ui";
+  summaryRow,
+} from "@/lib/ui";
 
 export const metadata: Metadata = { title: "FAQ" };
 
@@ -61,9 +64,18 @@ export default async function AdminFaqPage() {
         desc={`${items.length} pertanyaan tampil di halaman FAQ publik.`}
       />
 
-      <details className={`${card} mb-4 p-4 sm:p-5`}>
-        <summary className="cursor-pointer text-sm font-medium list-none [&::-webkit-details-marker]:hidden">
-          + Tambah pertanyaan
+      <details className={`${card} group mb-4 p-4 sm:p-5`}>
+        <summary className="flex list-none items-center justify-between gap-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
+          <span className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-paper"
+            >
+              +
+            </span>
+            Tambah pertanyaan
+          </span>
+          <Chevron />
         </summary>
         <div className="mt-4">
           <FaqForm />
@@ -73,18 +85,19 @@ export default async function AdminFaqPage() {
       <div className="space-y-2">
         {items.map((f, i) => (
           <details key={f.id} className={`${card} overflow-hidden`}>
-            <summary className="flex cursor-pointer gap-3 px-4 py-3.5 list-none [&::-webkit-details-marker]:hidden sm:px-5">
-              <span className="font-mono text-xs text-zinc-400">
+            <summary className={summaryRow}>
+              <span className="font-mono text-xs text-zinc-600">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-medium">{f.q}</span>
-                <span className="mt-1 line-clamp-1 block text-sm text-zinc-500">
+                <span className="mt-1 line-clamp-1 block text-sm text-zinc-600">
                   {f.a}
                 </span>
               </span>
+              <Chevron />
             </summary>
-            <div className="border-t border-zinc-100 bg-zinc-50/60 px-4 py-4 sm:px-5">
+            <div className={disclosureBody}>
               <FaqForm f={f} />
               <form action={deleteFaqAction} className="mt-3">
                 <input type="hidden" name="id" value={f.id} />

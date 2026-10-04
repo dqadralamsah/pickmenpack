@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { rupiah } from "@/lib/format";
 import { saveSettingsAction } from "@/modules/admin/actions";
 import { getSettings } from "@/modules/admin/store";
-import { PageHeader, btnPrimary, card, field, label } from "@/modules/admin/ui";
+import { PageHeader } from "@/components/shared/page-header";
+import { btnPrimary, card, field, label } from "@/lib/ui";
 import { ONGKIR, estimateFee } from "@/modules/request/fee";
 
 export const metadata: Metadata = { title: "Pengaturan" };
