@@ -31,5 +31,12 @@ const iso = (d: Date) => d.toISOString();
   // Jumat 00.10 WIB (Kamis 17.10 UTC) → lewat cutoff, ikut minggu depan
   assert.equal(iso(nextStoreRun(new Date("2026-10-08T17:10:00Z")).cutoff), "2026-10-15T16:59:00.000Z");
 
+  // status banner: tutup Jumat–Sabtu (setelah cutoff), buka lagi mulai Minggu
+  assert.equal(nextStoreRun(new Date("2026-10-05T03:00:00Z")).open, true); // Senin
+  assert.equal(nextStoreRun(new Date("2026-10-08T16:30:00Z")).open, true); // Kamis 23.30
+  assert.equal(nextStoreRun(new Date("2026-10-08T17:10:00Z")).open, false); // Jumat 00.10
+  assert.equal(nextStoreRun(new Date("2026-10-10T05:00:00Z")).open, false); // Sabtu 12.00
+  assert.equal(nextStoreRun(new Date("2026-10-10T17:30:00Z")).open, true); // Minggu 00.30
+
   console.log("store run ok");
 }

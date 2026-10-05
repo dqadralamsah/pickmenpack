@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero, Section } from "@/components/layout/section";
-import { StoreRunSchedule } from "@/modules/home/components/store-run";
+import { HowItWorks } from "@/modules/home/components/how-it-works";
 import { PaymentInfo } from "@/modules/payment/components/payment-info";
 
 export const metadata: Metadata = { title: "How to Pay" };
@@ -17,7 +17,7 @@ export default function CaraBayarPage() {
         <PaymentInfo />
       </Section>
       <Section eyebrow="This week" title="Schedule" className="!pt-0">
-        <StoreRunSchedule />
+        <HowItWorks />
       </Section>
     </>
   );

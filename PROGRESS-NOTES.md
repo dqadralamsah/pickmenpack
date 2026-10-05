@@ -44,4 +44,4 @@
 - [ ] Foto: isi `image` di hero.tsx (slides), collections.tsx (tiles & showcases)
 - [ ] Filter `?c=` (kategori) belum dibaca di katalog — link kategori baru sampai /katalog saja
 - [ ] Halaman About/Blog/Terms belum ada
-- [ ] Update design-system/pickmenpack/MASTER.md (sekarang multi-warna, bukan 1 aksen)
+- [x] Update documents/DESIGN-SYSTEM.md (sekarang multi-warna, bukan 1 aksen)

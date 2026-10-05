@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Design system "Clean Commerce" — lihat design-system/pickmenpack/MASTER.md.
+/* Design system "Clean Commerce" — lihat documents/DESIGN-SYSTEM.md.
    Ink + aksen oranye + palet pop pastel (lihat --color-pop-*) + hijau aksi WA. */
 @theme {
   --color-ink: #111111;
@@ -52,6 +52,10 @@
   --color-pop-mint: #a7f3d0;
   --color-pop-peach: #fed7aa;
   --color-pop-blue: #1d4ed8;
+
+  /* Hijau neon — aksen KHUSUS di atas latar ink (kartu How it works).
+     12.5:1 di atas ink; jangan dipakai sebagai teks di atas putih. */
+  --color-neon: #a3e635;
 
   /* Netral murni. zinc-500 cuma untuk teks di atas putih (4.7:1); di atas
      zinc-100 pakai zinc-600. zinc-400 ke bawah untuk garis/ikon saja. */

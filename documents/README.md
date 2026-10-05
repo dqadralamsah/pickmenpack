@@ -9,6 +9,7 @@
 |---|---|---|---|
 | `PRD.md` | Product Requirements Document PickmenPack | Vault Obsidian (`docs/`), lalu dipublish ke Notion | Snapshot draft v1.9. Notion masih v1.8 |
 | `IMPLEMENTATION-STATUS.md` | Apa yang sudah dibangun dibanding PRD, daftar gap, dan checklist go-live | Repo (folder ini) | v1.0 |
+| `DESIGN-SYSTEM.md` | Design system UI "Clean Commerce" (token, komponen, aturan visual) | Repo | — |
 | `README.md` | Alur dokumentasi (file ini) | Repo | — |
 
 ## Documentation Flow

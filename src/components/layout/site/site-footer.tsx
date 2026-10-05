@@ -40,12 +40,12 @@ const columns: { title: string; links: FooterLink[] }[] = [
 ];
 
 const linkClass =
-  "-mx-1 inline-flex min-h-9 items-center rounded px-1 text-zinc-600 transition-colors duration-200 hover:text-ink";
+  "-mx-1 inline-flex min-h-9 items-center rounded px-1 text-[13px] text-zinc-600 transition-colors duration-200 hover:text-ink";
 
 function FooterItem({ l }: { l: FooterLink }) {
   if (l.soon)
     return (
-      <span className="inline-flex min-h-9 items-center gap-2 text-zinc-500">
+      <span className="inline-flex min-h-9 items-center gap-2 text-[13px] text-zinc-500">
         {l.label}
         <span className="rounded-full bg-zinc-200 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-zinc-600 uppercase">
           Soon
@@ -65,7 +65,7 @@ function Social({ href, label, handle, children }: { href: string; label: string
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group -mx-1 flex min-h-11 items-center gap-3 rounded px-1 text-zinc-600 transition-colors duration-200 hover:text-ink"
+      className="group -mx-1 flex min-h-11 items-center gap-3 rounded px-1 text-[13px] text-zinc-600 transition-colors duration-200 hover:text-ink"
     >
       <span className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-300 bg-white transition-colors duration-200 group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
@@ -83,10 +83,10 @@ function Social({ href, label, handle, children }: { href: string; label: string
 export function SiteFooter() {
   return (
     <footer className="mt-16 border-t border-zinc-200 bg-zinc-50 sm:mt-24">
-      <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 pt-12 pb-24 sm:grid-cols-2 sm:px-6 sm:pt-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.2fr]">
+      <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 pt-12 pb-24 sm:grid-cols-2 sm:px-6 sm:pt-16 lg:grid-cols-[1.3fr_0.9fr_1.1fr_1fr_1.5fr]">
         <div className="sm:col-span-2 lg:col-span-1">
           <Logo />
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-600">
+          <p className="mt-3 max-w-xs text-[13px] leading-relaxed text-zinc-600">
             Your friend at the mall. We pick the pair, check it by hand, and pack it
             for you.
           </p>
@@ -121,12 +121,14 @@ export function SiteFooter() {
             </Social>
           </div>
 
-          {/* Ketentuan singkat — WhatsApp sendiri sudah ada di tombol melayang. */}
-          <ul className="mt-4 space-y-1.5 rounded-2xl border border-zinc-200 bg-white p-4 text-xs leading-relaxed text-zinc-600">
-            <li>{site.hours}</li>
+          {/* Ketentuan singkat — WhatsApp sendiri sudah ada di tombol melayang.
+              Kolom ini paling lebar (1.5fr) supaya baris jam "… WIB" gak patah;
+              text-balance bikin baris yang tetap panjang patahnya rata. */}
+          <ul className="mt-4 space-y-1.5 rounded-2xl border border-zinc-200 bg-white p-4 text-[11px] leading-relaxed text-balance text-zinc-600">
+            <li className="font-semibold text-accent-dark">{site.hours}</li>
             <li>Requests close Thursday 23.59 WIB</li>
             <li>No deposit — pay once the price is final</li>
-            <li>COD {site.serviceArea}, insured courier elsewhere</li>
+            <li>COD {site.serviceArea}, tracked courier elsewhere</li>
           </ul>
         </div>
       </div>

@@ -1,5 +1,5 @@
 /**
- * Class recipe design system "Clean Commerce" (design-system/pickmenpack/MASTER.md).
+ * Class recipe design system "Clean Commerce" (documents/DESIGN-SYSTEM.md).
  * Dipakai bareng situs publik & panel admin supaya tombol/input gak diracik
  * ulang per halaman. Sementara sampai shadcn/ui dipasang di `src/components/ui`.
  */

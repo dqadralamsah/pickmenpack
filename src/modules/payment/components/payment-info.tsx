@@ -9,7 +9,7 @@ const steps = [
   "Happy with it? Transfer the full amount to one of the accounts below by Saturday 09.00 WIB.",
   "Send the transfer proof over WhatsApp.",
   "Saturday we buy, check and photograph your pair, then pack it.",
-  "It ships Sunday (Monday at the latest) by insured courier, or we meet for COD.",
+  "It ships Sunday (Monday at the latest) by tracked courier, or we meet for COD.",
 ];
 
 const policies = [

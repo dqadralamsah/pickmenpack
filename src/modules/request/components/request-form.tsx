@@ -281,7 +281,7 @@ export function RequestForm({ defaultItem = "", waNumber }: { defaultItem?: stri
             {(
               [
                 ["cod", `COD ${site.serviceArea}`, "Free, handed over in person"],
-                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, insured`],
+                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, tracked`],
               ] as const
             ).map(([value, title, note]) => (
               <label

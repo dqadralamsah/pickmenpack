@@ -2,7 +2,7 @@
 
 import { Children, useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
@@ -17,7 +17,7 @@ const ctrl =
   "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-ink transition-colors duration-200 hover:border-ink disabled:pointer-events-none disabled:opacity-40";
 
 /**
- * Carousel shadcn + autoplay + titik + tombol jeda — dipakai banner Home &
+ * Carousel shadcn + autoplay + titik (+ panah kalau bukan overlay) — dipakai banner Home &
  * ulasan. Autoplay berhenti saat kursor/fokus keyboard di dalam slider, dan
  * gak jalan sama sekali kalau user minta reduced motion (WCAG 2.2.2).
  *
@@ -35,7 +35,7 @@ export function Slider({
   label: string;
   itemClassName?: string;
   delay?: number;
-  /** true: kontrol melayang di pojok kiri-bawah slide (buat banner penuh). */
+  /** true: cuma bullet, melayang di tengah-bawah slide (buat banner penuh). */
   overlayControls?: boolean;
 }) {
   const slides = Children.toArray(children);
@@ -44,10 +44,9 @@ export function Slider({
     Autoplay({ delay, stopOnInteraction: false, stopOnMouseEnter: false, stopOnFocusIn: false }),
   );
   const [api, setApi] = useState<CarouselApi>();
-  /** null = belum dipilih user → ikut preferensi reduced motion. */
-  const [choice, setChoice] = useState<"play" | "pause" | null>(null);
-  const reduced = useSyncExternalStore(subscribeMotion, getMotion, () => false);
-  const paused = choice ? choice === "pause" : reduced;
+  // Tanpa tombol jeda: autoplay mati kalau user minta reduced motion, dan
+  // berhenti selama kursor/fokus keyboard ada di dalam slider.
+  const paused = useSyncExternalStore(subscribeMotion, getMotion, () => false);
 
   // Posisi & jumlah titik dibaca langsung dari embla (sumber kebenarannya).
   const subscribe = useCallback(
@@ -71,22 +70,17 @@ export function Slider({
     if (!paused) autoplay.play();
   }, [autoplay, paused]);
 
-  const toggle = () => setChoice(paused ? "play" : "pause");
-
   const controls = (
     <div
       className={
         overlayControls
-          ? "glass absolute bottom-4 left-4 z-10 flex items-center gap-1.5 rounded-full p-1 sm:bottom-6 sm:left-6"
+          ? "glass absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center rounded-full px-1 sm:bottom-6"
           : "mt-5 flex items-center gap-2"
       }
     >
-      <button type="button" onClick={toggle} className={overlayControls ? `${ctrl} h-9 w-9 border-0` : ctrl} aria-label={paused ? "Play slides" : "Pause slides"}>
-        {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-      </button>
 
       {/* Titik = posisi; tiap titik tetap 24px area tekan biar ramah jempol. */}
-      <div className={`flex items-center ${overlayControls ? "px-1" : "flex-1"}`}>
+      <div className={`flex items-center ${overlayControls ? "" : "flex-1"}`}>
         {Array.from({ length: snapCount }, (_, i) => (
           <button
             key={i}

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "@/components/shared/icons";
 import { Section } from "@/components/layout/section";
 import { tones, type Tone } from "@/lib/tones";
-import { products } from "@/modules/catalog/data";
+import { products, type Category } from "@/modules/catalog/data";
+import { ProductGrid } from "@/modules/catalog/components/product-grid";
 import { Sneaker } from "@/modules/catalog/components/product-art";
 
 /** Kategori: grid 4 × 2. `image` = gambar kartu jadi (path di /public) yang
@@ -83,10 +84,11 @@ type Showcase = {
   title: string;
   desc: string;
   href: string;
+  category: Category;
   tone: Tone;
   /** Kalimat besar di atas banner (pengganti teks di foto). */
   headline: string;
-  /** Foto banner lebar di /public (rasio ±3:1 desktop, 4:3 mobile). Kosong = ilustrasi. */
+  /** Foto banner lebar di /public (rasio 4:1 desktop, 16:9 mobile). Kosong = ilustrasi. */
   image?: string;
 };
 
@@ -96,6 +98,7 @@ const showcases: Showcase[] = [
     title: "Running",
     desc: "Daily trainers to race-day shoes, from Nike, Adidas, Asics and New Balance.",
     href: "/katalog?c=running",
+    category: "running",
     tone: "sky",
     headline: "Built for your next 5K",
   },
@@ -103,6 +106,7 @@ const showcases: Showcase[] = [
     title: "Lifestyle & Court",
     desc: "The everyday classics: Samba, Chuck 70, Old Skool, 530 and friends.",
     href: "/katalog?c=lifestyle",
+    category: "lifestyle",
     tone: "lime",
     headline: "Clean pairs for every day",
   },
@@ -110,6 +114,7 @@ const showcases: Showcase[] = [
     title: "Sandals & Slides",
     desc: "Easy wins for weekends, the gym bag and every trip to the beach.",
     href: "/katalog?c=sandals",
+    category: "sandals",
     tone: "peach",
     headline: "Slide into the weekend",
   },
@@ -119,7 +124,7 @@ function ShowcaseBanner({ s }: { s: Showcase }) {
   return (
     <Link
       href={s.href}
-      className={`group relative block aspect-[4/3] overflow-hidden rounded-3xl sm:aspect-[5/2] lg:aspect-[3/1] ${tones[s.tone]}`}
+      className={`group relative block aspect-[16/9] overflow-hidden rounded-3xl sm:aspect-[3/1] lg:aspect-[4/1] ${tones[s.tone]}`}
     >
       {s.image ? (
         <Image
@@ -131,14 +136,14 @@ function ShowcaseBanner({ s }: { s: Showcase }) {
         />
       ) : (
         <>
-          <span aria-hidden className="absolute -right-[10%] -bottom-[30%] aspect-square w-[70%] rounded-full bg-white/50 sm:w-[45%]" />
-          <Sneaker className="absolute right-[4%] bottom-[12%] w-[62%] -rotate-6 text-ink transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:-translate-y-2 group-hover:-rotate-10 sm:w-[40%]" />
+          <span aria-hidden className="absolute -right-[10%] -bottom-[30%] aspect-square w-[70%] rounded-full bg-white/50 sm:w-[40%] lg:w-[32%]" />
+          <Sneaker className="absolute right-[4%] bottom-[12%] w-[46%] -rotate-6 text-ink transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:-translate-y-2 group-hover:-rotate-10 sm:w-[30%] lg:w-[24%]" />
         </>
       )}
-      <span className="absolute top-6 left-6 max-w-[55%] font-heading text-2xl leading-tight font-bold text-balance sm:top-10 sm:left-10 sm:text-4xl">
+      <span className="absolute top-5 left-5 max-w-[55%] font-heading text-xl leading-tight font-bold text-balance sm:top-7 sm:left-8 sm:text-3xl">
         {s.headline}
       </span>
-      <span className="absolute bottom-6 left-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-paper transition-colors duration-200 group-hover:bg-zinc-800 sm:bottom-10 sm:left-10">
+      <span className="absolute bottom-5 left-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-paper transition-colors duration-200 group-hover:bg-zinc-800 sm:bottom-7 sm:left-8">
         Shop {s.title.toLowerCase()} <ArrowRight className="h-4 w-4" />
       </span>
     </Link>
@@ -165,6 +170,10 @@ export function CategoryShowcase() {
           }
         >
           <ShowcaseBanner s={s} />
+          {/* Rak produk kategori: selalu 2 baris (6 kolom × 2 di layar lebar). */}
+          <div className="mt-6 sm:mt-8">
+            <ProductGrid products={products.filter((p) => p.category === s.category).slice(0, 12)} rows={2} />
+          </div>
         </Section>
       ))}
     </>

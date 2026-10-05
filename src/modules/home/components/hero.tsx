@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { site } from "@/lib/site";
 import { tones, type Tone } from "@/lib/tones";
 import { pillAccent, pillOutline } from "@/lib/ui";
-import { ShieldIcon, StoreIcon, TagIcon, WalletIcon } from "@/components/shared/icons";
 import { Slider } from "@/components/shared/slider";
 import { discountPercent, products } from "@/modules/catalog/data";
 import { ProductArt, Sneaker } from "@/modules/catalog/components/product-art";
@@ -115,7 +113,7 @@ function SlideCard({ s, first }: { s: Slide; first: boolean }) {
   );
 }
 
-/** Banner utama: slider promo (autoplay 6 detik, bisa dijeda & digeser). */
+/** Banner utama: slider promo (autoplay 6 detik, bullet + geser). */
 export function Hero() {
   return (
     <section className="mx-auto w-full max-w-[1200px] px-4 pt-4 sm:px-6 sm:pt-6">
@@ -125,29 +123,5 @@ export function Hero() {
         ))}
       </Slider>
     </section>
-  );
-}
-
-/** Nilai jual (PRD 1.1, 5.3–5.5) — 4 kartu warna-warni, tampil sebelum FAQ. */
-const trust: { icon: typeof StoreIcon; title: string; body: string; tone: Tone }[] = [
-  { icon: StoreIcon, title: "Straight from the store", body: "Official counters only, checked by hand.", tone: "mint" },
-  { icon: WalletIcon, title: "Zero deposit", body: "Pay once, after the price is locked in.", tone: "yellow" },
-  { icon: TagIcon, title: "Honest fees", body: "From Rp25k per item, shown before you pay.", tone: "pink" },
-  { icon: ShieldIcon, title: "Safe delivery", body: `Insured courier, or COD around ${site.serviceArea}.`, tone: "sky" },
-];
-
-export function WhyUs() {
-  return (
-    <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-      {trust.map((t) => (
-        <li key={t.title} className={`rounded-2xl p-5 sm:p-6 ${tones[t.tone]}`}>
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink">
-            <t.icon className="h-5 w-5" />
-          </span>
-          <h3 className="mt-4 text-[15px] font-semibold sm:text-base">{t.title}</h3>
-          <p className="mt-1 text-sm leading-relaxed text-ink/70">{t.body}</p>
-        </li>
-      ))}
-    </ul>
   );
 }

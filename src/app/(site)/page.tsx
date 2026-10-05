@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Section, SeeAll } from "@/components/layout/section";
-import { Hero, WhyUs } from "@/modules/home/components/hero";
+import { Hero } from "@/modules/home/components/hero";
 import { Collections, BrandFocus, CategoryShowcase } from "@/modules/home/components/collections";
 import { HowItWorks } from "@/modules/home/components/how-it-works";
-import { StoreRunRules, StoreRunSchedule } from "@/modules/home/components/store-run";
+import { Why } from "@/modules/home/components/why";
+import { Pricing } from "@/modules/home/components/pricing";
+import { homeContent } from "@/modules/home/content";
 import { products } from "@/modules/catalog/data";
 import { ProductGrid } from "@/modules/catalog/components/product-grid";
 import { TestimonialList } from "@/modules/testimonial/components/testimonial-list";
@@ -35,25 +37,22 @@ export default function Home() {
 
       <CategoryShowcase />
 
-      <Section
-        eyebrow="The weekly routine"
-        title="One mall run, every Saturday"
-        desc="We gather everyone’s requests during the week and shop them all in one go."
-      >
-        <StoreRunSchedule />
-        <StoreRunRules />
+      {/* Tiga section dari vault "Landing Page Content": kenapa percaya → prosesnya
+          & kapan → uangnya dihitung bagaimana. Satu fakta cuma di satu section. */}
+      <Section id="why" title={homeContent.why.title} desc={homeContent.why.subtitle}>
+        <Why />
       </Section>
 
-      <Section eyebrow="How it works" title="Five easy steps to your pair" desc="Check first, pay once — that’s the whole idea.">
+      <Section id="how-it-works" title={homeContent.howItWorks.title} desc={homeContent.howItWorks.subtitle}>
         <HowItWorks />
+      </Section>
+
+      <Section id="pricing" title={homeContent.pricing.title} desc={homeContent.pricing.subtitle}>
+        <Pricing />
       </Section>
 
       <Section eyebrow="Real orders" title="Happy feet, happy people">
         <TestimonialList />
-      </Section>
-
-      <Section eyebrow="Why PickmenPack" title="Shopping with a friend at the mall">
-        <WhyUs />
       </Section>
 
       <Section eyebrow="FAQ" title="Good questions" action={<SeeAll href="/faq" label="See all" />}>
