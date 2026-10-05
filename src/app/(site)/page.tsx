@@ -1,88 +1,80 @@
 import Link from "next/link";
-import { Section } from "@/components/layout/section";
-import { Hero, WhyUs } from "@/modules/home/hero";
-import { HeroSlider } from "@/modules/home/slider";
-import { Collections, BrandFocus } from "@/modules/home/collections";
-import { HowItWorks } from "@/modules/home/how-it-works";
-import { StoreRunRules, StoreRunSchedule } from "@/modules/home/store-run";
+import { Section, SeeAll } from "@/components/layout/section";
+import { Hero, WhyUs } from "@/modules/home/components/hero";
+import { Collections, BrandFocus, CategoryShowcase } from "@/modules/home/components/collections";
+import { HowItWorks } from "@/modules/home/components/how-it-works";
+import { StoreRunRules, StoreRunSchedule } from "@/modules/home/components/store-run";
 import { products } from "@/modules/catalog/data";
-import { ProductGrid } from "@/modules/catalog/product-grid";
-import { TestimonialList } from "@/modules/testimonial/testimonial-list";
-import { FaqList } from "@/modules/faq/faq-list";
+import { ProductGrid } from "@/modules/catalog/components/product-grid";
+import { TestimonialList } from "@/modules/testimonial/components/testimonial-list";
+import { FaqList } from "@/modules/faq/components/faq-list";
 import { faqs } from "@/modules/faq/data";
-
-const seeAll = (href: string, label = "See all →") => (
-  <Link href={href} className="eyebrow shrink-0 border-b border-accent/40 pb-1 text-accent hover:border-accent">
-    {label}
-  </Link>
-);
 
 export default function Home() {
   return (
     <>
       <Hero />
 
-      <Section>
-        <HeroSlider />
-      </Section>
-
-      {/* Kategori & brand tanpa judul section — visualnya yang bicara. */}
-      <Section className="!pb-4">
+      {/* Kategori langsung tanpa judul — grid 4 × 2. */}
+      <Section className="!pt-8 !pb-4 sm:!pt-10">
         <Collections />
       </Section>
 
-      <Section title="Brand Focus" desc="The counters we walk into most often." className="!pt-6">
-        <BrandFocus />
-      </Section>
-
       <Section
-        title="Most wanted sneakers"
-        desc="The pairs people ask for the most, refreshed after every store run."
-        action={seeAll("/katalog")}
+        eyebrow="Trending"
+        title="Everyone’s asking for these"
+        desc="Fresh from our last mall run. Final price is always checked before you pay."
+        action={<SeeAll href="/katalog" />}
       >
         <ProductGrid products={products.slice(0, 6)} />
       </Section>
 
+      <Section eyebrow="Our regulars" title="Brands we shop every week">
+        <BrandFocus />
+      </Section>
+
+      <CategoryShowcase />
+
       <Section
-        title="One store run, every week"
-        desc="Requests are collected through the week and bought in a single Saturday trip to the mall. You always know when you'll hear from us and when your pair ships."
+        eyebrow="The weekly routine"
+        title="One mall run, every Saturday"
+        desc="We gather everyone’s requests during the week and shop them all in one go."
       >
         <StoreRunSchedule />
         <StoreRunRules />
       </Section>
 
-      <Section title="Why it works both ways" desc="Four things that keep this fair for you and sustainable for us.">
-        <WhyUs />
-      </Section>
-
-      <Section title="How it works" desc="Check first, pay once. You never pay before the exact price is confirmed.">
+      <Section eyebrow="How it works" title="Five easy steps to your pair" desc="Check first, pay once — that’s the whole idea.">
         <HowItWorks />
       </Section>
 
-      <Section title="What people say">
+      <Section eyebrow="Real orders" title="Happy feet, happy people">
         <TestimonialList />
       </Section>
 
-      <Section title="Frequently asked" action={seeAll("/faq", "All FAQ →")}>
+      <Section eyebrow="Why PickmenPack" title="Shopping with a friend at the mall">
+        <WhyUs />
+      </Section>
+
+      <Section eyebrow="FAQ" title="Good questions" action={<SeeAll href="/faq" label="See all" />}>
         <FaqList items={faqs.slice(0, 5)} />
       </Section>
 
       <Section>
-        <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-accent-soft px-6 py-14 text-center sm:py-20">
-          <div aria-hidden className="dotted pointer-events-none absolute inset-0 opacity-40" />
+        <div className="relative overflow-hidden rounded-3xl bg-pop-yellow px-6 py-12 text-center sm:py-16">
+          <span aria-hidden className="absolute -top-16 -left-16 h-48 w-48 rounded-full bg-pop-peach" />
+          <span aria-hidden className="absolute -right-12 -bottom-20 h-56 w-56 rounded-full bg-pop-lime" />
           <div className="relative">
-            <p className="eyebrow text-accent">Ready to order?</p>
-            <h2 className="mx-auto mt-4 max-w-lg text-3xl font-semibold text-ink sm:text-[44px] sm:leading-[1.08]">
-              Got a pair in mind?
-            </h2>
-            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-zinc-600">
-              Describe it, see the estimate right away. You only pay once the exact price is confirmed.
+            <h2 className="text-3xl font-bold sm:text-4xl">Seen a pair you love?</h2>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink/75">
+              Drop us the details and see a rough estimate right away. You only pay
+              once we&rsquo;ve confirmed the real price.
             </p>
             <Link
               href="/request"
-              className="mt-8 inline-block rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-paper transition-colors hover:bg-accent-dark"
+              className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-7 text-sm font-semibold text-paper transition-colors duration-200 hover:bg-zinc-800"
             >
-              Start a request
+              Start my request
             </Link>
           </div>
         </div>

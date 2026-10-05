@@ -20,7 +20,7 @@ const items = [
   },
   {
     href: "/katalog",
-    label: "Catalog",
+    label: "Shop",
     svg: (
       <>
         <path d="M5.5 7.5h13l1 12.5h-15z" {...stroke} />
@@ -66,7 +66,10 @@ export function BottomNav() {
   const path = usePathname();
 
   return (
-    <nav className="pb-safe fixed inset-x-0 bottom-0 z-50 border-t border-zinc-200 bg-paper/95 backdrop-blur md:hidden">
+    <nav
+      aria-label="Main"
+      className="pb-safe fixed inset-x-0 bottom-0 z-50 border-t border-zinc-200 bg-paper/95 backdrop-blur md:hidden"
+    >
       <ul className="mx-auto flex max-w-md items-stretch justify-around px-1 pt-1.5">
         {items.map((it) => {
           const active = path === it.href;
@@ -75,16 +78,14 @@ export function BottomNav() {
               <Link
                 href={it.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-12 flex-col items-center gap-0.5 rounded-xl py-1 text-[10px] font-medium transition-colors active:bg-zinc-100 ${
-                  active ? "text-accent" : "text-zinc-500"
+                className={`flex min-h-12 flex-col items-center gap-0.5 rounded-lg py-1 text-[11px] transition-colors duration-200 active:bg-zinc-100 ${
+                  active ? "font-semibold text-ink" : "text-zinc-500"
                 }`}
               >
                 <span
                   className={
                     it.primary
-                      ? `-mt-4 flex h-11 w-11 items-center justify-center rounded-full text-paper shadow-lg shadow-accent/30 ${
-                          active ? "bg-accent-dark" : "bg-accent"
-                        }`
+                      ? "-mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent-dark text-paper ring-4 ring-paper"
                       : ""
                   }
                 >

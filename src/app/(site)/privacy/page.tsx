@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Section } from "@/components/layout/section";
+import { PageHero, Section } from "@/components/layout/section";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Privacy Policy" };
@@ -16,15 +16,22 @@ const points = [
 
 export default function PrivacyPage() {
   return (
-    <Section title="Privacy Policy" desc={`How ${site.brand} handles the data you send through the request form.`}>
-      <dl className="max-w-2xl divide-y divide-zinc-200 rounded-2xl border border-zinc-200 bg-white">
-        {points.map(([k, v]) => (
-          <div key={k} className="px-5 py-4 sm:px-6">
-            <dt className="font-medium">{k}</dt>
-            <dd className="mt-1 text-sm leading-relaxed text-zinc-600">{v}</dd>
-          </div>
-        ))}
-      </dl>
-    </Section>
+    <>
+      <PageHero
+        eyebrow="UU 27/2022 PDP"
+        title="Privacy policy"
+        desc={`How ${site.brand} handles the data you send through the request form.`}
+      />
+      <Section className="!pt-6">
+        <dl className="max-w-3xl divide-y divide-zinc-200 border-y border-zinc-200">
+          {points.map(([k, v]) => (
+            <div key={k} className="py-4">
+              <dt className="font-semibold">{k}</dt>
+              <dd className="mt-1 text-sm leading-relaxed text-zinc-600">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+    </>
   );
 }

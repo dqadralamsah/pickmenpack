@@ -1,54 +1,94 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+/* Design system "Clean Commerce" — lihat design-system/pickmenpack/MASTER.md.
+   Ink + aksen oranye + palet pop pastel (lihat --color-pop-*) + hijau aksi WA. */
 @theme {
-  /* Netral hangat yang bersih (bukan beige) — dasar monokrom biar gak butek. */
-  --color-ink: #1c1917;
-  --color-paper: #fbfbfa;
+  --color-ink: #111111;
+  --color-paper: #ffffff;
 
-  /* Satu aksen saja. orange-700: teks putih di atasnya & teks aksen di atas
-     paper sama-sama lolos WCAG AA 4.5:1 (#e2571e lama cuma ~3.4:1). */
-  --color-accent: #c2410c;
-  --color-accent-dark: #9a3412;
-  --color-accent-soft: #fff1e8;
+  /* Satu-satunya aksen. Aturannya:
+     - `accent`      → dekoratif (dot, ikon, garis). Bukan buat teks kecil.
+     - `accent-dark` → teks beraksen & isian dengan teks putih (5.2:1).
+     - `accent-deep` → hover/active dari accent-dark.
+     - `accent-soft` → latar hangat (banner, ikon, highlight). */
+  --color-accent: #ea580c;
+  --color-accent-dark: #c2410c;
+  --color-accent-deep: #9a3412;
+  --color-accent-soft: #fff4ed;
+
+  /* Label diskon pakai aksen yang sama — gak ada warna ketiga. */
+  --color-sale: var(--color-accent-dark);
 
   --color-brand: var(--color-ink);
-  --color-brand-dark: #44403c;
-  --color-brand-soft: #f5f5f4;
+  --color-brand-dark: #404040;
+  --color-brand-soft: #f5f5f5;
 
-  /* zinc di-remap ke netral hangat — semua border/teks abu yang sudah ada ikut
-     kebawa tanpa perlu diubah satu-satu. */
-  --color-zinc-50: #fafaf9;
-  --color-zinc-100: #f5f5f4;
-  --color-zinc-200: #e7e5e4;
-  --color-zinc-300: #d6d3d1;
-  --color-zinc-400: #a8a29e;
-  --color-zinc-500: #78716c;
-  --color-zinc-600: #57534e;
-  --color-zinc-700: #44403c;
-  --color-zinc-800: #292524;
-  --color-zinc-900: #1c1917;
-  --color-zinc-950: #0c0a09;
+  /* Warna status semantik (PRD 7.4) — dipakai bareng situs publik & admin. */
+  --color-success: #047857;
+  --color-success-soft: #ecfdf5;
+  --color-warning: #b45309;
+  --color-warning-soft: #fffbeb;
+  --color-danger: #be123c;
+  --color-danger-soft: #fff1f2;
+  --color-whatsapp: #0b6b57;
+  --color-whatsapp-dark: #085243;
 
-  --font-sans: var(--font-geist-sans);
+  /* Tombol aksi WhatsApp (melayang, CTA chat) — hijau terang tapi teks putih
+     tetap 5:1. `-hover` buat state tekan. */
+  --color-action: #15803d;
+  --color-action-hover: #166534;
+  --color-action-soft: #dcfce7;
+
+  /* Palet "pop": latar pastel buat banner, kategori & kartu supaya halaman
+     gak monoton putih-hitam. Teks di atasnya SELALU ink (>10:1 di semua tone).
+     Peta tone → class ada di src/lib/tones.ts. */
+  --color-pop-lime: #d9f99d;
+  --color-pop-sky: #bae6fd;
+  --color-pop-pink: #fbcfe8;
+  --color-pop-violet: #ddd6fe;
+  --color-pop-yellow: #fde68a;
+  --color-pop-mint: #a7f3d0;
+  --color-pop-peach: #fed7aa;
+  --color-pop-blue: #1d4ed8;
+
+  /* Netral murni. zinc-500 cuma untuk teks di atas putih (4.7:1); di atas
+     zinc-100 pakai zinc-600. zinc-400 ke bawah untuk garis/ikon saja. */
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f5f5f5;
+  --color-zinc-200: #e5e5e5;
+  --color-zinc-300: #d4d4d4;
+  --color-zinc-400: #a3a3a3;
+  --color-zinc-500: #737373;
+  --color-zinc-600: #525252;
+  --color-zinc-700: #404040;
+  --color-zinc-800: #262626;
+  --color-zinc-900: #171717;
+  --color-zinc-950: #0a0a0a;
+
+  --font-sans: var(--font-jakarta);
+  --font-heading: var(--font-outfit);
   --font-mono: var(--font-geist-mono);
+
+  /* Token gerak: feedback kecil 150ms, transisi elemen 200ms, zoom foto 400ms. */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-tap: 150ms;
+  --duration-ui: 200ms;
+  --duration-move: 400ms;
+
+  /* Tinggi header sticky — dipakai juga buat scroll-padding & offset chip filter. */
+  --header-h: 3.5rem;
+  --header-h-md: 4.5rem;
 }
 
-/* Label mono uppercase — pengganti aksen warna buat bikin hierarki. */
+/* Label kecil untuk hierarki ringan (bukan judul). */
 @utility eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-zinc-500);
-}
-
-/* Tekstur titik halus, dipasang di layer sendiri (absolute) supaya mask-nya
-   gak ikut nge-fade konten di atasnya. */
-@utility dotted {
-  background-image: radial-gradient(var(--color-zinc-300) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(to bottom, #000, transparent 75%);
 }
 
 /* Baris scroll horizontal ala app mobile, tanpa scrollbar bawaan desktop. */
@@ -68,40 +108,178 @@
   margin-bottom: env(safe-area-inset-bottom);
 }
 
+/* Jarak aman di atas action bar melayang + bottom nav di mobile. */
+@utility bottom-safe {
+  bottom: calc(4.75rem + env(safe-area-inset-bottom));
+}
+
+@utility text-balance-heading {
+  text-wrap: balance;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  /* Scrollbar halaman tipis & netral (Firefox + Chromium baru). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-zinc-300) transparent;
+  /* Anchor & elemen yang di-fokus keyboard gak boleh ketutup header sticky. */
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: calc(var(--header-h-md) + 1rem);
+  }
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
-}
-
-/* Angka rata lebar biar harga & tabel gak "goyang". */
-body {
+  /* Angka rata lebar biar harga & tabel gak "goyang". */
   font-variant-numeric: tabular-nums;
 }
 
-h1, h2, h3 {
-  letter-spacing: -0.025em;
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading), var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
-html {
-  scroll-behavior: smooth;
+p {
+  text-wrap: pretty;
 }
 
-/* Fokus keyboard selalu kelihatan, tanpa mengganggu klik mouse/tap. */
-:where(a, button, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  border-radius: 6px;
+@layer base {
+  /* Satu ring fokus untuk seluruh app. :focus-visible supaya klik mouse gak ikut
+     kena, tapi navigasi keyboard selalu kelihatan. Ditaruh di @layer base supaya
+     class utility (mis. outline-none + ring di search bar) bisa menimpanya. */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+    /* Sengaja TANPA border-radius: kalau diset di sini, elemen rounded-full
+       (search bar, pill) ikut jadi kotak saat difokus. Outline modern sudah
+       mengikuti radius elemennya sendiri. */
+  }
+
+  /* Di atas latar gelap ring ink gak kelihatan. */
+  .on-dark :focus-visible,
+  .on-dark:focus-visible {
+    outline-color: var(--color-paper);
+  }
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-deep);
+}
+
+summary {
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Safari belum dukung scrollbar-width — fallback tipis yang sama. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-zinc-300);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Latar kaca (frosted) buat elemen yang nempel di atas konten: chip filter,
+   kontrol slider. Fallback solid kalau browser gak dukung backdrop-filter. */
+@utility glass {
+  background-color: rgb(255 255 255 / 0.92);
+  @supports (backdrop-filter: blur(1px)) {
+    background-color: rgb(255 255 255 / 0.6);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   shadcn/ui — variabel tema dipetakan ke palet Clean Commerce di atas.
+   CATATAN: `accent` sengaja TIDAK dipetakan ke --accent milik shadcn, karena
+   di proyek ini `accent` = oranye brand. Komponen shadcn yang butuh warna
+   hover muted pakai `muted`.
+   Ubah sudut semua komponen shadcn lewat satu angka: --radius.
+   --------------------------------------------------------------------------- */
+@theme inline {
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
+  --card: var(--color-paper);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-paper);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-ink);
+  --primary-foreground: var(--color-paper);
+  --secondary: var(--color-zinc-100);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-zinc-100);
+  --muted-foreground: var(--color-zinc-500);
+  --destructive: var(--color-danger);
+  --border: var(--color-zinc-200);
+  --input: var(--color-zinc-300);
+  --ring: var(--color-ink);
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }

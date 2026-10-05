@@ -4,14 +4,17 @@ import {
   saveTestimonialAction,
 } from "@/modules/admin/actions";
 import { testimonialDb, type TestimonialItem } from "@/modules/admin/store";
+import { PageHeader } from "@/components/shared/page-header";
+import { Chevron } from "@/components/shared/chevron";
 import {
-  PageHeader,
   btnDanger,
   btnPrimary,
   card,
+  disclosureBody,
   field,
   label,
-} from "@/modules/admin/ui";
+  summaryRow,
+} from "@/lib/ui";
 
 export const metadata: Metadata = { title: "Testimoni" };
 
@@ -82,9 +85,18 @@ export default async function AdminTestimoniPage() {
         desc={`${items.length} testimoni tampil di halaman depan.`}
       />
 
-      <details className={`${card} mb-4 p-4 sm:p-5`}>
-        <summary className="cursor-pointer text-sm font-medium list-none [&::-webkit-details-marker]:hidden">
-          + Tambah testimoni
+      <details className={`${card} group mb-4 p-4 sm:p-5`}>
+        <summary className="flex list-none items-center justify-between gap-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
+          <span className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-paper"
+            >
+              +
+            </span>
+            Tambah testimoni
+          </span>
+          <Chevron />
         </summary>
         <div className="mt-4">
           <TestimonialForm />
@@ -94,23 +106,26 @@ export default async function AdminTestimoniPage() {
       <div className="space-y-2">
         {items.map((t) => (
           <details key={t.id} className={`${card} overflow-hidden`}>
-            <summary className="cursor-pointer px-4 py-3.5 list-none [&::-webkit-details-marker]:hidden sm:px-5">
-              <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span className="text-sm font-medium">{t.nama}</span>
-                <span className="text-xs text-zinc-500">
-                  {t.kota} · {t.item}
-                </span>
-                {t.highlight && (
-                  <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
-                    {t.highlight}
+            <summary className={summaryRow}>
+              <span className="min-w-0 flex-1">
+                <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="text-sm font-medium">{t.nama}</span>
+                  <span className="text-xs text-zinc-600">
+                    {t.kota} · {t.item}
                   </span>
-                )}
+                  {t.highlight && (
+                    <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent-dark">
+                      {t.highlight}
+                    </span>
+                  )}
+                </span>
+                <span className="mt-1.5 line-clamp-1 block text-sm text-zinc-600">
+                  {t.pesan}
+                </span>
               </span>
-              <span className="mt-1.5 line-clamp-1 block text-sm text-zinc-600">
-                {t.pesan}
-              </span>
+              <Chevron />
             </summary>
-            <div className="border-t border-zinc-100 bg-zinc-50/60 px-4 py-4 sm:px-5">
+            <div className={disclosureBody}>
               <TestimonialForm t={t} />
               <form action={deleteTestimonialAction} className="mt-3">
                 <input type="hidden" name="id" value={t.id} />

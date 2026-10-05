@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PickmenPack
+
+Website jastip sepatu untuk brand **Soletip**: katalog promo, form request dengan estimasi fee otomatis, info cara bayar, FAQ, testimoni, dan panel admin. Closing dan pembayaran tetap lewat WhatsApp (MVP Simple). Target live awal Desember 2026.
 
 ## Getting Started
 
-First, run the development server:
+Butuh Node.js 22 atau lebih baru.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Cek logika fee dan store admin (belum ada test runner, jadi dijalankan manual):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+node --experimental-strip-types src/modules/request/fee.check.ts
+node --experimental-strip-types src/modules/admin/store.check.ts
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment
 
-## Learn More
+| Variable | Fungsi | Default (hanya untuk development) |
+|---|---|---|
+| `ADMIN_PASSWORD` | Password login panel `/admin` | `pickmenpack` |
+| `ADMIN_SECRET` | Secret untuk menandatangani cookie sesi admin | `<password>-dev-secret` |
 
-To learn more about Next.js, take a look at the following resources:
+Set keduanya sebelum deploy.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/
+│   ├── (site)/            # halaman publik: /, /katalog, /request, /cara-bayar, /faq
+│   └── admin/             # login + panel admin
+├── components/
+│   ├── layout/            # kerangka halaman
+│   │   ├── site/          # header, footer, bottom nav
+│   │   ├── admin/         # sidebar + top bar panel admin
+│   │   └── section.tsx    # container section, dipakai dua-duanya
+│   ├── shared/            # komponen reusable lintas modul (page header, stat card, empty)
+│   └── ui/                # khusus primitive shadcn/ui (belum dipasang)
+├── lib/                   # konstanta brand/WhatsApp, format rupiah & tanggal, class token UI
+└── modules/               # admin, catalog, faq, home, payment, request, testimonial
+    └── <modul>/
+        ├── components/    # komponen milik modul itu sendiri
+        └── *.ts           # data, tipe, server action, logika bisnis
+```
 
-## Deploy on Vercel
+Data katalog, testimoni, FAQ, dan pesanan masih dummy/in-memory. Rincian apa yang sudah dan belum ada: [documents/IMPLEMENTATION-STATUS.md](documents/IMPLEMENTATION-STATUS.md).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Dokumen bisnis dan requirement ada di [`documents/`](documents/README.md). Sumber utamanya Notion; alur penulisan dan publish dijelaskan di sana.
+
+## Notes
+
+Project ini memakai Next.js 16, yang punya breaking changes dibanding versi sebelumnya. Baca panduan di `node_modules/next/dist/docs/` sebelum menulis kode (lihat `AGENTS.md`).
