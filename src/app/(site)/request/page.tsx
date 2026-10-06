@@ -7,10 +7,15 @@ import { RequestForm } from "@/modules/request/components/request-form";
 export const metadata: Metadata = { title: "Request a Pair" };
 
 export default async function RequestPage(props: PageProps<"/request">) {
-  const { item, q } = await props.searchParams;
+  const { item, q, color, size } = await props.searchParams;
   const picked = products.find((p) => p.slug === item);
+  // Warna & ukuran dari halaman detail — cuma dipakai kalau memang ada di produk itu.
+  const colorName = picked?.colors?.find((c) => c.name === color)?.name;
+  const defaultSize = picked?.sizes.find((s) => s === size) ?? "";
   // `q` datang dari pencarian katalog yang kosong — isi otomatis kolom item.
-  const defaultItem = picked ? `${picked.brand} ${picked.name}` : typeof q === "string" ? q.slice(0, 80) : "";
+  const defaultItem = picked
+    ? `${picked.brand} ${picked.name}${colorName ? ` — ${colorName}` : ""}`
+    : typeof q === "string" ? q.slice(0, 80) : "";
   const { waNumber } = await getSettings();
 
   return (
@@ -20,7 +25,7 @@ export default async function RequestPage(props: PageProps<"/request">) {
         desc="Fill in the details and the estimate updates as you type. We check stock and the exact price with the store first."
       />
       <Section className="!pt-6">
-        <RequestForm defaultItem={defaultItem} waNumber={waNumber} />
+        <RequestForm defaultItem={defaultItem} defaultSize={defaultSize} waNumber={waNumber} />
       </Section>
     </>
   );

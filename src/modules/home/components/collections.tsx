@@ -13,14 +13,14 @@ import { Sneaker } from "@/modules/catalog/components/product-art";
  *  persegi dan gambar di-crop ke tengah, jadi taruh teks/objek di tengah.
  *  Selama `image` kosong kartu tampil pastel + label + siluet. */
 const collections: { label: string; href: string; tone: Tone; image?: string }[] = [
-  { label: "Top 50", href: "/katalog?c=top-50", tone: "peach" },
-  { label: "Under 1jt", href: "/katalog?c=under-1jt", tone: "lime" },
+  { label: "Top 50", href: "/katalog", tone: "peach" },
+  { label: "Under 1jt", href: "/katalog?max=1000000", tone: "lime" },
   { label: "Running", href: "/katalog?c=running", tone: "sky" },
   { label: "Sandals & Slides", href: "/katalog?c=sandals", tone: "yellow" },
-  { label: "For Him", href: "/katalog?c=for-him", tone: "mint" },
-  { label: "For Her", href: "/katalog?c=for-her", tone: "pink" },
+  { label: "For Him", href: "/katalog?g=men", tone: "mint" },
+  { label: "For Her", href: "/katalog?g=women", tone: "pink" },
   { label: "Apparel", href: "/katalog?c=apparel", tone: "violet" },
-  { label: "Under Retail", href: "/katalog?c=under-retail", tone: "zinc" },
+  { label: "Under Retail", href: "/katalog?sort=discount", tone: "zinc" },
 ];
 
 /** Kartu kecil yang seluruhnya gambar. Mobile: persegi 4 kolom. ≥sm: pendek 5:2. */

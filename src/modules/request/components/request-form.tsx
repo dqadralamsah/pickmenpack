@@ -25,9 +25,17 @@ function FieldError({ id, msg }: { id: string; msg?: string }) {
   ) : null;
 }
 
-export function RequestForm({ defaultItem = "", waNumber }: { defaultItem?: string; waNumber: string }) {
+export function RequestForm({
+  defaultItem = "",
+  defaultSize = "",
+  waNumber,
+}: {
+  defaultItem?: string;
+  defaultSize?: string;
+  waNumber: string;
+}) {
   const [item, setItem] = useState(defaultItem);
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState(defaultSize);
   const [price, setPrice] = useState("");
   const [delivery, setDelivery] = useState<Delivery>("cod");
   const [state, action, pending] = useActionState<RequestState, FormData>(submitRequestAction, null);

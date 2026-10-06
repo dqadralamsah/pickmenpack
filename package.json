@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types src/modules/request/fee.check.ts && node --experimental-strip-types src/modules/admin/store.check.ts"
+    "test": "node --experimental-strip-types src/modules/request/fee.check.ts && node --experimental-strip-types src/modules/admin/store.check.ts && node --experimental-strip-types src/modules/catalog/filter.check.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
