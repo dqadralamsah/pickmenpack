@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Info } from "lucide-react";
 import { rupiah } from "@/lib/format";
 import { waLink } from "@/lib/site";
 import { btnPrimary } from "@/lib/ui";
 import { WhatsAppIcon } from "@/components/shared/icons";
 import { CATEGORY_LABEL, GENDER_LABEL, discountPercent, type Colorway, type Product } from "../data";
 import { ProductArt } from "./product-art";
+import { SizePicker } from "./size-picker";
 
 const STOCK: Record<Product["stock"], [string, string]> = {
   ready: ["In stock at the store", "bg-emerald-500"],
@@ -38,7 +40,7 @@ export function ProductDetail({
   const images: (string | undefined)[] = color.images?.length ? color.images : [undefined];
   const habis = product.stock === "habis";
   const title = `${product.brand} ${product.name}`;
-  const variant = [color.name, size && `size ${size}`].filter(Boolean).join(", ");
+  const variant = [color.name, size && `size EU ${size}`].filter(Boolean).join(", ");
   const diskon = discountPercent(product);
 
   const requestHref = habis
@@ -102,9 +104,12 @@ export function ProductDetail({
             </p>
           )}
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
-          Price range from the store promo. We send the exact price on <strong className="text-ink">{quoteDay}</strong>{" "}
-          before you pay anything.
+        <p className="mt-3 flex gap-2.5 rounded-xl bg-info-soft px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
+          <Info aria-hidden className="mt-0.5 size-4 shrink-0 text-info" />
+          <span>
+            Price range from the store promo. We send the exact price on <strong className="text-ink">{quoteDay}</strong>{" "}
+            before you pay anything.
+          </span>
         </p>
         <p className="mt-3 flex items-center gap-2 text-sm font-medium">
           <span aria-hidden className={`h-2 w-2 rounded-full ${STOCK[product.stock][1]}`} />
@@ -140,30 +145,9 @@ export function ProductDetail({
         )}
 
         {product.sizes.length > 0 && (
-          <fieldset className="mt-7" disabled={habis}>
-            <legend className="flex w-full items-baseline justify-between text-sm font-semibold">
-              Size (EU)
-              <span className="text-xs font-normal text-zinc-500">Optional — you can pick later</span>
-            </legend>
-            <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6">
-              {product.sizes.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSize(size === s ? "" : s)}
-                  aria-pressed={size === s}
-                  className={`h-11 rounded-lg border text-sm font-medium transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40 ${
-                    size === s ? "border-ink bg-ink text-paper" : "border-zinc-200 bg-white hover:border-ink"
-                  }`}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-zinc-500">
-              Wrong-size items can&rsquo;t be returned — add your foot length in the request if unsure.
-            </p>
-          </fieldset>
+          <div className="mt-8">
+            <SizePicker sizes={product.sizes} gender={product.gender} value={size} onChange={setSize} disabled={habis} />
+          </div>
         )}
 
         <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">

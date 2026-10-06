@@ -12,7 +12,7 @@ export default async function KatalogPage({ searchParams }: PageProps<"/katalog"
     <>
       <PageHero
         title="Shop"
-        desc="On sale now at the official stores, from the latest store run. Prices are a range — the exact price and fee are confirmed before you pay."
+        desc="Live deals from the official stores — exact price confirmed before you pay."
       />
       <Section className="!pt-4">
         <CatalogBrowser

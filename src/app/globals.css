@@ -2,24 +2,27 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
 /* Design system "Clean Commerce" — lihat documents/DESIGN-SYSTEM.md.
-   Ink + aksen oranye + palet pop pastel (lihat --color-pop-*) + hijau aksi WA. */
+   Ink + aksen hijau + palet pop pastel (lihat --color-pop-*). Hijau aksen = hijau
+   aksi WA (6 Okt 2026, sebelumnya oranye) — satu warna aksen di seluruh situs. */
 @theme {
   --color-ink: #111111;
   --color-paper: #ffffff;
 
   /* Satu-satunya aksen. Aturannya:
-     - `accent`      → dekoratif (dot, ikon, garis). Bukan buat teks kecil.
-     - `accent-dark` → teks beraksen & isian dengan teks putih (5.2:1).
+     - `accent`      → dekoratif (dot, ikon, garis). Bukan buat teks kecil (3.3:1).
+     - `accent-dark` → teks beraksen & isian dengan teks putih (5.0:1).
      - `accent-deep` → hover/active dari accent-dark.
-     - `accent-soft` → latar hangat (banner, ikon, highlight). */
-  --color-accent: #ea580c;
-  --color-accent-dark: #c2410c;
-  --color-accent-deep: #9a3412;
-  --color-accent-soft: #fff4ed;
+     - `accent-soft` → latar lembut (banner, ikon, highlight). */
+  --color-accent: #16a34a;
+  --color-accent-dark: #15803d;
+  --color-accent-deep: #166534;
+  --color-accent-soft: #f0fdf4;
 
-  /* Label diskon pakai aksen yang sama — gak ada warna ketiga. */
-  --color-sale: var(--color-accent-dark);
+  /* Label diskon: rose kalem, bukan merah menyala — 4.7:1 dengan teks putih. */
+  --color-sale: #e11d48;
 
   --color-brand: var(--color-ink);
   --color-brand-dark: #404040;
@@ -32,6 +35,9 @@
   --color-warning-soft: #fffbeb;
   --color-danger: #be123c;
   --color-danger-soft: #fff1f2;
+  /* Info: catatan penjelasan (bukan aksi, bukan peringatan). Teks/ikon 6.7:1. */
+  --color-info: #1d4ed8;
+  --color-info-soft: #eff6ff;
   --color-whatsapp: #0b6b57;
   --color-whatsapp-dark: #085243;
 
@@ -175,6 +181,15 @@ p {
   .on-dark:focus-visible {
     outline-color: var(--color-paper);
   }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
 
 ::selection {
@@ -228,7 +243,7 @@ summary {
 /* ---------------------------------------------------------------------------
    shadcn/ui — variabel tema dipetakan ke palet Clean Commerce di atas.
    CATATAN: `accent` sengaja TIDAK dipetakan ke --accent milik shadcn, karena
-   di proyek ini `accent` = oranye brand. Komponen shadcn yang butuh warna
+   di proyek ini `accent` = hijau aksen brand. Komponen shadcn yang butuh warna
    hover muted pakai `muted`.
    Ubah sudut semua komponen shadcn lewat satu angka: --radius.
    --------------------------------------------------------------------------- */
@@ -256,6 +271,8 @@ summary {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* JANGAN tambah --color-accent / --font-sans di sini — `shadcn init/add` suka
+     menyisipkannya; itu menimpa aksen hijau brand & font Jakarta (lihat catatan di atas). */
 }
 
 :root {
@@ -287,3 +304,4 @@ summary {
     cursor: pointer;
   }
 }
+

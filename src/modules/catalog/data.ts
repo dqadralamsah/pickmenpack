@@ -1,7 +1,8 @@
 // Dummy catalog — replaced by manual Admin updates later (PRD 6.1).
 
 export type Category = "running" | "lifestyle" | "sandals" | "apparel";
-export type Gender = "men" | "women" | "unisex";
+/** Unisex = sepatu dewasa yang tampil di filter Men DAN Women. Kids berdiri sendiri. */
+export type Gender = "men" | "women" | "unisex" | "kids";
 
 export const CATEGORY_LABEL: Record<Category, string> = {
   running: "Running",
@@ -10,7 +11,15 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   apparel: "Apparel",
 };
 
-export const GENDER_LABEL: Record<Gender, string> = { men: "Men", women: "Women", unisex: "Unisex" };
+export const GENDER_LABEL: Record<Gender, string> = {
+  men: "Men",
+  women: "Women",
+  unisex: "Unisex (Men & Women)",
+  kids: "Kids",
+};
+
+/** Opsi di filter Shop — unisex bukan opsi, ia ikut Men & Women. */
+export const FILTER_GENDERS = ["men", "women", "kids"] as const satisfies readonly Gender[];
 
 /** Satu warna dari model yang sama. `images` = foto asli (path /public atau URL),
  *  urutan = urutan galeri. Kosong → placeholder siluet diwarnai `hex`. */
@@ -34,6 +43,9 @@ export type Product = {
   colors?: Colorway[];
   /** Foto tunggal lama (sebelum ada `colors`); kalau kosong kartu pakai placeholder. */
   image?: string;
+  /** Tanggal masuk katalog (ISO) untuk sort "Newly added". Kosong → urutan di array
+   *  (yang paling bawah dianggap paling baru). */
+  addedAt?: string;
 };
 
 /** Foto sampul kartu: foto pertama warna pertama, lalu `image` lama. */
@@ -180,6 +192,59 @@ export const products: Product[] = [
     store: "Skechers Store",
     stock: "habis",
     accent: "from-zinc-200 to-zinc-300",
+  },
+  // Ukuran anak (EU kecil) — pakai tabel Kids di sizes.ts.
+  {
+    slug: "nike-revolution-7-kids",
+    category: "running",
+    gender: "kids",
+    brand: "Nike",
+    name: "Revolution 7 Kids",
+    priceOriginal: 549_000,
+    pricePromo: 384_000,
+    sizes: ["28", "29.5", "31", "32", "33"],
+    store: "Nike Store",
+    stock: "ready",
+    accent: "from-zinc-100 to-zinc-300",
+    colors: [
+      { name: "Black / White", hex: "#18181b" },
+      { name: "Photo Blue", hex: "#2563eb" },
+    ],
+  },
+  {
+    slug: "adidas-grand-court-kids",
+    category: "lifestyle",
+    gender: "kids",
+    brand: "Adidas",
+    name: "Grand Court 2.0 Kids",
+    priceOriginal: 699_000,
+    pricePromo: 489_000,
+    sizes: ["33", "34", "35", "36", "36.5"],
+    store: "Adidas Originals Store",
+    stock: "ready",
+    accent: "from-zinc-200 to-zinc-100",
+    colors: [
+      { name: "Cloud White / Pink", hex: "#fbcfe8" },
+      { name: "Cloud White / Blue", hex: "#bfdbfe" },
+    ],
+  },
+  {
+    slug: "crocs-classic-clog-kids",
+    category: "sandals",
+    gender: "kids",
+    brand: "Crocs",
+    name: "Classic Clog Kids",
+    priceOriginal: 599_000,
+    pricePromo: 419_000,
+    sizes: ["27", "28", "29.5", "31", "32"],
+    store: "Crocs Store",
+    stock: "limited",
+    accent: "from-zinc-100 to-zinc-200",
+    colors: [
+      { name: "Lemon", hex: "#fde047" },
+      { name: "Bright Cobalt", hex: "#1d4ed8" },
+      { name: "Pink Lemonade", hex: "#f9a8d4" },
+    ],
   },
   ...dummy([
     // [kategori, brand, nama, harga normal, harga promo, stok, gender (kosong = unisex)]

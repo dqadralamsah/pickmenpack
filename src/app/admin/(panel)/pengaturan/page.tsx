@@ -60,6 +60,11 @@ export default async function AdminPengaturanPage() {
 
         <div className={`${card} p-4 sm:p-5`}>
           <p className="eyebrow">Rekening tujuan</p>
+          <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+            Tampil di halaman How to Pay sebagai daftar resmi untuk dicocokkan customer. Untuk baris{" "}
+            <strong>QRIS</strong>, isi <em>Atas nama</em> dengan nama merchant yang muncul saat QR di-scan — gambar QR-nya
+            dikirim lewat WhatsApp, tidak dipasang di website.
+          </p>
           <div className="mt-4 space-y-3">
             {s.accounts.map((a, i) => (
               <div key={i} className="grid gap-3 sm:grid-cols-3">

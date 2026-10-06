@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { rupiah } from "@/lib/format";
-import { btnGhost, btnPrimary, chipOff, chipOn } from "@/lib/ui";
+import { chipOff, chipOn } from "@/lib/ui";
 import { Empty } from "@/components/shared/empty-state";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { CATEGORY_LABEL, GENDER_LABEL, type Category, type Product } from "../data";
 import {
   PRICE_PRESETS,
@@ -21,11 +24,11 @@ import { ProductGrid } from "./product-grid";
 
 const none = (f: Filters): Filters => ({ ...f, c: [], g: [], brand: [], min: undefined, max: undefined, inStock: false });
 
-/** Halaman Shop: sidebar filter di desktop (≥lg), bottom sheet di mobile.
+/** Halaman Shop: sidebar filter 248px di desktop (≥lg), sheet bawah di mobile.
  *  State filter = URL (replaceState, tanpa round-trip server) — lihat `filter.ts`. */
 export function CatalogBrowser({ products, initial }: { products: Product[]; initial: Filters }) {
   const [f, setF] = useState(initial);
-  const sheet = useRef<HTMLDialogElement>(null);
+  const [sheet, setSheet] = useState(false);
   const set = (next: Filters) => {
     setF(next);
     window.history.replaceState(null, "", `/katalog${toQuery(next)}`);
@@ -37,9 +40,9 @@ export function CatalogBrowser({ products, initial }: { products: Product[]; ini
   return (
     <div className="lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-10">
       <aside aria-label="Filters" className="hidden lg:block">
-        <div className="no-scrollbar sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto pb-8">
-          <div className="mb-5 flex items-baseline justify-between">
-            <h2 className="text-base font-bold">Filters</h2>
+        <div className="no-scrollbar sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto pr-2 pb-10">
+          <div className="mb-6 flex items-center justify-between px-1">
+            <h2 className="text-lg font-bold">Filters</h2>
             {n > 0 && <ClearAll onClick={() => set(none(f))} />}
           </div>
           <CatalogFilters products={products} f={f} set={set} />
@@ -49,38 +52,41 @@ export function CatalogBrowser({ products, initial }: { products: Product[]; ini
       <div className="min-w-0">
         {/* Bar nempel di bawah header saat scroll (mobile). Latar solid — produk di
             belakangnya tidak boleh tembus, chip & teks harus tetap terbaca. */}
-        <div className="sticky top-14 z-30 -mx-4 flex items-center gap-2 border-b border-zinc-200 bg-paper px-4 py-3 sm:-mx-6 sm:px-6 md:top-18 lg:static lg:mx-0 lg:border-0 lg:px-0 lg:pt-0">
-          <button
-            type="button"
-            onClick={() => sheet.current?.showModal()}
-            className={`${chipOff} gap-2 lg:hidden`}
-            aria-haspopup="dialog"
+        <div className="sticky top-14 z-30 -mx-4 flex items-center gap-3 border-b border-zinc-200 bg-paper px-4 py-3 sm:-mx-6 sm:px-6 md:top-18 lg:static lg:mx-0 lg:border-0 lg:px-0 lg:pt-0">
+          <Button
+            variant="outline"
+            onClick={() => setSheet(true)}
+            className="h-11 gap-2 rounded-full border-zinc-200 px-4 font-semibold lg:hidden"
           >
-            <SlidersHorizontal className="h-4 w-4" aria-hidden />
+            <SlidersHorizontal aria-hidden />
             Filters
             {n > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1 text-[11px] font-semibold text-paper">
-                {n}
-              </span>
+              <span className="flex size-5 items-center justify-center rounded-full bg-ink text-[11px] text-paper">{n}</span>
             )}
-          </button>
+          </Button>
           <p className="text-sm text-zinc-500" aria-live="polite">
             {count}
           </p>
-          <label className="ml-auto flex items-center gap-2 text-sm">
-            <span className="hidden text-zinc-500 sm:inline">Sort by</span>
-            <select
-              value={f.sort}
-              onChange={(e) => set({ ...f, sort: e.target.value as Sort })}
-              className="h-10 cursor-pointer rounded-full border border-zinc-200 bg-white pr-8 pl-4 text-sm font-medium outline-none hover:border-ink focus-visible:ring-2 focus-visible:ring-ink"
+          <Select
+            items={SORT_LABEL}
+            value={f.sort}
+            onValueChange={(v) => v && set({ ...f, sort: v as Sort })}
+          >
+            <SelectTrigger
+              aria-label="Sort by"
+              className="ml-auto h-11 rounded-full border-zinc-200 bg-white pr-3 pl-4 font-medium data-[size=default]:h-11 hover:border-ink"
             >
+              <span className="hidden text-zinc-500 sm:inline">Sort:</span>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent align="end" className="rounded-2xl">
               {(Object.keys(SORT_LABEL) as Sort[]).map((s) => (
-                <option key={s} value={s}>
+                <SelectItem key={s} value={s} className="min-h-11 rounded-xl">
                   {SORT_LABEL[s]}
-                </option>
+                </SelectItem>
               ))}
-            </select>
-          </label>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Kategori cepat di mobile — satu ketukan tanpa buka sheet. */}
@@ -118,49 +124,42 @@ export function CatalogBrowser({ products, initial }: { products: Product[]; ini
               Nothing matches these filters. We can still look for it at the store — just send a request.
             </Empty>
           ) : (
-            <ProductGrid products={shown} cols="sm:grid-cols-3 xl:grid-cols-4" />
+            <ProductGrid products={shown} cols="sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" />
           )}
         </div>
       </div>
 
-      {/* Bottom sheet mobile. <dialog> native: fokus terkunci, Esc menutup, latar inert.
-          Klik di luar panel (= elemen dialog-nya sendiri) juga menutup. */}
-      <dialog
-        ref={sheet}
-        aria-label="Filters"
-        onClick={(e) => e.target === e.currentTarget && sheet.current?.close()}
-        className="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-full flex-col rounded-t-3xl bg-paper p-0 text-ink backdrop:bg-ink/40 open:flex lg:hidden"
-      >
-        <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
-          <h2 className="text-base font-bold">Filters</h2>
-          <button
-            type="button"
-            onClick={() => sheet.current?.close()}
-            aria-label="Close filters"
-            className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full hover:bg-zinc-100"
-          >
-            <X className="h-5 w-5" aria-hidden />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4">
-          <CatalogFilters products={products} f={f} set={set} />
-        </div>
-        <div className="flex gap-3 border-t border-zinc-200 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <button type="button" onClick={() => set(none(f))} disabled={!n} className={`${btnGhost} flex-1`}>
-            Clear all
-          </button>
-          <button type="button" onClick={() => sheet.current?.close()} className={`${btnPrimary} flex-[2]`}>
-            Show {count}
-          </button>
-        </div>
-      </dialog>
+      {/* Sheet mobile (Base UI Dialog): fokus terkunci, Esc & klik latar menutup. */}
+      <Sheet open={sheet} onOpenChange={setSheet}>
+        <SheetContent side="bottom" className="max-h-[88dvh] rounded-t-3xl bg-paper lg:hidden">
+          <SheetHeader className="border-b border-zinc-200 px-5 py-4">
+            <SheetTitle className="text-lg font-bold">Filters</SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto overscroll-contain px-4 pt-6">
+            <CatalogFilters products={products} f={f} set={set} />
+          </div>
+          <SheetFooter className="flex-row gap-3 border-t border-zinc-200 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <Button
+              variant="outline"
+              onClick={() => set(none(f))}
+              disabled={!n}
+              className="h-12 flex-1 rounded-full border-zinc-200 font-semibold"
+            >
+              Clear all
+            </Button>
+            <Button onClick={() => setSheet(false)} className="h-12 flex-[2] rounded-full font-semibold">
+              Show {count}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
 
 function ClearAll({ onClick }: { onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="text-sm font-medium underline underline-offset-4 hover:text-accent-dark">
+    <button type="button" onClick={onClick} className="min-h-11 text-sm font-semibold underline underline-offset-4 hover:text-accent-dark">
       Clear all
     </button>
   );
@@ -188,15 +187,15 @@ function ActiveChips({ f, set }: { f: Filters; set: (f: Filters) => void }) {
     <ul aria-label="Active filters" className="mt-4 flex flex-wrap items-center gap-2">
       {chips.map(([label, next]) => (
         <li key={label}>
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={() => set(next)}
             aria-label={`Remove filter ${label}`}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-zinc-100 pr-2.5 pl-3.5 text-sm font-medium transition-colors duration-150 hover:bg-zinc-200"
+            className="h-9 gap-1.5 rounded-full bg-zinc-100 pr-3 pl-4 font-medium hover:bg-zinc-200"
           >
             {label}
-            <X className="h-3.5 w-3.5" aria-hidden />
-          </button>
+            <X aria-hidden className="size-3.5" />
+          </Button>
         </li>
       ))}
       {chips.length > 1 && (

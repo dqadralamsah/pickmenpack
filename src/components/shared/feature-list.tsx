@@ -1,7 +1,7 @@
 export type Feature = { icon: React.ComponentType<{ className?: string }>; title: string; body: string };
 
-/** Daftar poin kalem: garis tipis di atas tiap poin dengan potongan aksen oranye
- *  di ujung kirinya, ikon oranye tanpa latar. Dipakai "Why PickmenPack". */
+/** Daftar poin kalem: garis tipis di atas tiap poin dengan potongan aksen hijau
+ *  di ujung kirinya, ikon hijau tanpa latar. Dipakai "Why PickmenPack". */
 export function FeatureList({ items, className = "" }: { items: Feature[]; className?: string }) {
   return (
     <ul className={`grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4 ${className}`}>

@@ -3,7 +3,7 @@
 
 import type { Category, Gender, Product } from "./data.ts";
 
-export type Sort = "featured" | "price-asc" | "price-desc" | "discount";
+export type Sort = "featured" | "discount" | "newest" | "price-asc" | "price-desc";
 
 export type Filters = {
   c: Category[];
@@ -16,11 +16,13 @@ export type Filters = {
   q: string;
 };
 
+/** Urutan key = urutan di dropdown Sort. */
 export const SORT_LABEL: Record<Sort, string> = {
   featured: "Featured",
-  "price-asc": "Price: low to high",
-  "price-desc": "Price: high to low",
-  discount: "Biggest discount",
+  discount: "Best deals",
+  newest: "Newly added",
+  "price-asc": "Price (Lowest – Highest)",
+  "price-desc": "Price (Highest – Lowest)",
 };
 
 /** Preset harga, mengikuti batas tier fee (PRD 5.4). */
@@ -69,9 +71,9 @@ export function toQuery(f: Filters): string {
   return s ? `?${s}` : "";
 }
 
-/** Unisex ikut tampil saat filter Men atau Women dipilih. */
+/** Unisex (dewasa) ikut tampil di Men dan Women; Kids hanya produk anak. */
 const genderMatch = (want: Gender[], g: Gender = "unisex") =>
-  !want.length || want.includes(g) || (g === "unisex" && want.some((w) => w !== "unisex"));
+  !want.length || want.includes(g) || (g === "unisex" && (want.includes("men") || want.includes("women")));
 
 export function applyFilters(products: Product[], f: Filters): Product[] {
   const q = f.q.toLowerCase();
@@ -86,9 +88,14 @@ export function applyFilters(products: Product[], f: Filters): Product[] {
       (!q || `${p.brand} ${p.name}`.toLowerCase().includes(q)),
   );
   const off = (p: Product) => 1 - p.pricePromo / p.priceOriginal;
+  const pos = new Map(products.map((p, i) => [p, i]));
   if (f.sort === "price-asc") return shown.toSorted((a, b) => a.pricePromo - b.pricePromo);
   if (f.sort === "price-desc") return shown.toSorted((a, b) => b.pricePromo - a.pricePromo);
   if (f.sort === "discount") return shown.toSorted((a, b) => off(b) - off(a));
+  if (f.sort === "newest")
+    return shown.toSorted(
+      (a, b) => (b.addedAt ?? "").localeCompare(a.addedAt ?? "") || pos.get(b)! - pos.get(a)!,
+    );
   return shown;
 }
 

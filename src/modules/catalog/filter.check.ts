@@ -27,6 +27,16 @@ assert.deepEqual(slugs({ q: "NIKE c" }), ["c"]);
 // Urutan.
 assert.deepEqual(slugs({ sort: "price-asc" }), ["c", "a", "b", "d"]);
 assert.deepEqual(slugs({ sort: "discount" }), ["c", "a", "d", "b"]);
+// Kids berdiri sendiri: tidak ikut Men/Women, dan unisex dewasa tidak ikut Kids.
+const withKids = [...items, p("e", { gender: "kids" })];
+const kidsSlugs = (q: Record<string, string>) => applyFilters(withKids, parseFilters(q)).map((x) => x.slug);
+assert.deepEqual(kidsSlugs({ g: "kids" }), ["e"]);
+assert.deepEqual(kidsSlugs({ g: "men" }), ["a", "c", "d"]);
+assert.deepEqual(kidsSlugs({ g: "men,kids" }), ["a", "c", "d", "e"]);
+// Newly added: addedAt dulu, sisanya yang paling bawah di array = paling baru.
+assert.deepEqual(slugs({ sort: "newest" }), ["d", "c", "b", "a"]);
+const dated = items.map((x) => (x.slug === "b" ? { ...x, addedAt: "2026-10-01" } : x));
+assert.equal(applyFilters(dated, parseFilters({ sort: "newest" }))[0].slug, "b");
 // Nilai ngawur diabaikan.
 assert.equal(parseFilters({ sort: "lol", min: "-5" }).sort, "featured");
 assert.equal(parseFilters({ min: "-5" }).min, undefined);

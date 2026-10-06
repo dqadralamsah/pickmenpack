@@ -81,7 +81,7 @@ export function RequestForm({
           ))}
         </ol>
 
-        <p className="mt-4 rounded-xl bg-zinc-100 px-4 py-3 text-xs leading-relaxed text-zinc-700">
+        <p className="mt-4 rounded-xl bg-info-soft px-4 py-3 text-xs leading-relaxed text-zinc-700">
           Please double-check your size: <strong>wrong-size items can&rsquo;t be returned or exchanged</strong>.
           We send the brand&rsquo;s official size chart together with your final price.
         </p>

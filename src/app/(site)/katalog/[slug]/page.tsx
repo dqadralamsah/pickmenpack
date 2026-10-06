@@ -3,6 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Section } from "@/components/layout/section";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { CATEGORY_LABEL, products } from "@/modules/catalog/data";
 import { ProductDetail } from "@/modules/catalog/components/product-detail";
 import { ProductGrid } from "@/modules/catalog/components/product-grid";
@@ -29,27 +37,27 @@ export default async function ProductPage({ params }: PageProps<"/katalog/[slug]
   return (
     <>
       <Section className="!pt-6">
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-zinc-500">
-          <ol className="flex flex-wrap items-center gap-1.5">
-            <li>
-              <Link href="/katalog" className="hover:text-ink">Shop</Link>
-            </li>
+        <Breadcrumb className="mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink render={<Link href="/katalog" />}>Shop</BreadcrumbLink>
+            </BreadcrumbItem>
             {category && (
-              <li className="flex items-center gap-1.5">
-                <span aria-hidden>/</span>
-                <Link href={`/katalog?c=${category}`} className="hover:text-ink">
-                  {CATEGORY_LABEL[category]}
-                </Link>
-              </li>
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink render={<Link href={`/katalog?c=${category}`} />}>{CATEGORY_LABEL[category]}</BreadcrumbLink>
+                </BreadcrumbItem>
+              </>
             )}
-            <li className="flex min-w-0 items-center gap-1.5">
-              <span aria-hidden>/</span>
-              <span aria-current="page" className="truncate text-ink">
+            <BreadcrumbSeparator />
+            <BreadcrumbItem className="min-w-0">
+              <BreadcrumbPage className="truncate">
                 {product.brand} {product.name}
-              </span>
-            </li>
-          </ol>
-        </nav>
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <ProductDetail product={product} fee={estimateFee(product.pricePromo)} quoteDay={runDay(nextStoreRun().quote)} />
       </Section>
 

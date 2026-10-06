@@ -5,7 +5,7 @@ import { homeContent } from "../content";
 const icons = { perItem: TagIcon, fee: WalletIcon, locked: ShieldIcon, receipt: StoreIcon };
 
 /** Pricing — aturan uang (PRD 5.4, 5.8). Satu panel bergaris rambut (beda dari
- *  daftar Why), aksen oranye di ikon, nomor & baris link bawah. */
+ *  daftar Why), aksen hijau di ikon, nomor & baris link bawah. */
 export function Pricing() {
   return (
     <div className="overflow-hidden rounded-3xl border border-zinc-200">
