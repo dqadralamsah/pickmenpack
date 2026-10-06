@@ -1,7 +1,8 @@
 # Progress Notes — Redesign Home (5 Okt 2026)
 
 > Catatan kerja kalau laptop mati di tengah jalan. Centang = sudah selesai.
-> Semua masih BELUM di-commit (branch `development`).
+> Sudah di-commit di branch `development` (`a873aac`, `f29d642`). Sisa TODO di bawah
+> juga tercatat di `documents/IMPLEMENTATION-STATUS.md` gap #16–#17 (#15 filter katalog sudah beres).
 
 ## Status per poin feedback
 
@@ -42,6 +43,6 @@
 - [x] tsc + eslint bersih; dicek di browser desktop (1366px) + mobile (hero). Banner kategori diperpendek (lg 3:1).
 - [x] Kartu kategori full-image dicek di browser (1034px) pakai gambar tes, lalu tes dihapus
 - [ ] Foto: isi `image` di hero.tsx (slides), collections.tsx (tiles & showcases)
-- [ ] Filter `?c=` (kategori) belum dibaca di katalog — link kategori baru sampai /katalog saja
+- [x] Filter katalog lengkap (kategori, gender, harga, brand, stok, sort) + halaman detail produk per warna
 - [ ] Halaman About/Blog/Terms belum ada
 - [x] Update documents/DESIGN-SYSTEM.md (sekarang multi-warna, bukan 1 aksen)

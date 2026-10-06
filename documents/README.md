@@ -7,10 +7,14 @@
 
 | File | Isi | Ditulis di | Versi |
 |---|---|---|---|
-| `PRD.md` | Product Requirements Document PickmenPack | Vault Obsidian (`docs/`), lalu dipublish ke Notion | Snapshot draft v1.9. Notion masih v1.8 |
-| `IMPLEMENTATION-STATUS.md` | Apa yang sudah dibangun dibanding PRD, daftar gap, dan checklist go-live | Repo (folder ini) | v1.0 |
-| `DESIGN-SYSTEM.md` | Design system UI "Clean Commerce" (token, komponen, aturan visual) | Repo | — |
+| `PRD.md` | Product Requirements Document PickmenPack | Vault Obsidian (`docs/`), lalu dipublish ke Notion | Snapshot v1.2 (6 Okt 2026). Notion masih v1.1 |
+| `BUSINESS-OPERATIONS.md` | Siklus mingguan, kebijakan harga/stok/refund/retur, rekening, legal | Vault, lalu Notion | Snapshot v0.1 (6 Okt 2026) |
+| `ORDER-JOURNEY.md` | Alur order target vs as-built dan lifecycle status order | Vault, lalu Notion | Snapshot v1.3 (6 Okt 2026). Notion masih v1.2 |
+| `IMPLEMENTATION-STATUS.md` | Apa yang sudah dibangun dibanding PRD, daftar gap, dan checklist go-live | Repo (folder ini) | v1.2 |
+| `DESIGN-SYSTEM.md` | Design system UI "Clean Commerce + Pop" (token, komponen, aturan visual) | Repo | — |
 | `README.md` | Alur dokumentasi (file ini) | Repo | — |
+
+Tidak di-snapshot ke sini (hanya di vault): Business & Market Research, Unit Economics, dan Landing Page Content — yang terakhir jadi acuan copy di `src/modules/home/content.ts`.
 
 ## Documentation Flow
 

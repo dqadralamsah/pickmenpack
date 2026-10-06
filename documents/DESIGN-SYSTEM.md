@@ -93,7 +93,7 @@ Uppercase + wide tracking only for small labels (`eyebrow` utility), never body 
 |---|---|
 | Radius | `rounded-3xl` big blocks (hero, How it works, Pricing, CTA banner) · `rounded-2xl` image panels & cards · `rounded-full` public CTAs, search, chips, pills · `rounded-lg/xl` inputs, admin buttons & cards |
 | Depth | Flat. Structure from borders (`zinc-200`) and colour blocks, not shadows. Hover on product cards = image zoom 1.04, no lift |
-| Glass | `glass` utility (frosted white, solid fallback) only for things floating over content: sticky catalog filter chips, slider controls |
+| Glass | `glass` utility (frosted white, solid fallback) only for small controls floating over imagery: slider bullets. **Not** for bars over scrolling content — the sticky Shop toolbar is solid `paper` + `zinc-200` bottom border (glass let products show through and hurt legibility) |
 | Spacing | 8px grid; sections `py-10 → py-14`; product grid gap 16–24px |
 | Container | `max-w-[1200px]`, gutter 16px → 24px |
 
@@ -124,13 +124,15 @@ Uppercase + wide tracking only for small labels (`eyebrow` utility), never body 
 | Hero slider | 4 slides, each a pastel tone, autoplay 6s, **bullets only** (centred, glass) — no pause button; autoplay stops on hover/focus and is off under reduced motion. Optional `image` per slide |
 | Category tiles | Grid 4 × 2, small cards, full-cover image (square mobile, 5:2 desktop), pastel tone as fallback |
 | Category showcase | Title + description + "View all" + short banner (16:9 → 3:1 → 4:1), pastel + sneaker illustration until an `image` is set. Below it a product shelf of **exactly 2 rows** (`ProductGrid rows={2}`: 4 / 6 / 8 / 12 cards at 2 / 3 / 4 / 6 cols), filtered by `Product.category` |
-| Product card | No border. Square `zinc-100` image panel (`rounded-2xl`), `sale` `-X%` pill top-left, 2-line name (turns `accent-dark` on hover), bold price + "up to" range |
+| Product card | No border. Square `zinc-100` image panel (`rounded-2xl`), `sale` `-X%` pill top-left, colour dots + "N colours" when a model has >1 colorway, 2-line name (turns `accent-dark` on hover), bold price + "up to" range. Whole card links to `/katalog/[slug]` |
+| Shop filters | ≥lg: 248px sticky sidebar of collapsible `<details>` groups (Category, Gender, Price presets + min/max, Brand with "Show all", Availability) using native checkbox/radio with `accent-ink`, facet counts in `zinc-400`. <lg: solid sticky toolbar (Filters button with count badge + Sort select) + quick category chips; filters open in a native `<dialog>` bottom sheet (`rounded-t-3xl`, `backdrop:bg-ink/40`, footer Clear all + "Show N items"). Active filters render as removable `zinc-100` pills. State lives in the URL |
+| Product detail | Two columns ≥lg (gallery 1.15fr / info 1fr). Gallery: square main image + thumbnails (left column on desktop, row below on mobile) per **colorway**; colour picker = product thumbnails with `ring-ink` on the selected one. Size grid of 44px buttons (ink when selected). CTAs: ink "Request this pair" (`rounded-full`) + outline "Ask on WhatsApp" with green icon. Details as a bordered `dl` |
 | How it works | Dark ink card (`on-dark`): status line (pulsing `neon` dot when requests are open, static `pop-yellow` when the cutoff has passed) → "Next run: {date}" with the date in `neon` → cutoff pill; 5-step timeline with `neon` numbered dots (ink number) and `neon` date labels. Neon instead of orange so the dark card stands apart from the orange Why/Pricing. Also used on /cara-bayar |
 | Pricing | One `rounded-3xl` panel, 4 cells split by 1px `zinc-200` hairlines, `accent` icon + `accent-dark` `01–04` index, `accent-soft` footer row with `accent-dark` link to /cara-bayar |
 | `FeatureList` (`src/components/shared/feature-list.tsx`) | Plain list: hairline `zinc-200` top border per item with a 40×2px `accent` bar on its left end, `accent` icon without background, title + `zinc-500` body; 1 → 2 → 4 cols. Used by Why PickmenPack |
 | Reviews | Slider, 3 (lg) → 4 (xl) per view, dots + arrows, no pause button. Compact card: `rounded-2xl p-5`, stars + highlight on one line, quote clamped to 4 lines, Bought / Size / Delivery. Slides get 1px inner padding so the edge card's border isn't clipped at 100% zoom |
 | CTA banner | `pop-yellow` block with decorative peach & lime circles, ink pill button |
-| Floating WhatsApp | `action` green, `rounded-full`, bottom-right above the bottom nav (`bottom-safe`) |
+| Floating WhatsApp | `action` green, 56px icon-only circle (`h-14 w-14 rounded-full`, `aria-label`) on every breakpoint, bottom-right above the bottom nav (`bottom-safe`) |
 
 ## 6. Layout
 

@@ -1,23 +1,17 @@
 # PickmenPack
 
-Website jastip sepatu untuk brand **Soletip**: katalog promo, form request dengan estimasi fee otomatis, info cara bayar, FAQ, testimoni, dan panel admin. Closing dan pembayaran tetap lewat WhatsApp (MVP Simple). Target live awal Desember 2026.
+Website jastip sepatu, sandal/slides, dan apparel **PickmenPack**: katalog promo, form request dengan estimasi fee otomatis, info cara bayar, FAQ, testimoni, dan panel admin. Request tersimpan ke database; konfirmasi harga dan pembayaran (penuh, tanpa DP) lewat WhatsApp (MVP Simple). Target live awal Desember 2026.
 
 ## Getting Started
 
-Butuh Node.js 22 atau lebih baru.
+Butuh Node.js 24 (database memakai `node:sqlite` bawaan Node).
 
 ```bash
 npm install
 npm run dev        # http://localhost:3000
 npm run lint
 npm run build
-```
-
-Cek logika fee dan store admin (belum ada test runner, jadi dijalankan manual):
-
-```bash
-node --experimental-strip-types src/modules/request/fee.check.ts
-node --experimental-strip-types src/modules/admin/store.check.ts
+npm test           # cek logika fee, jadwal store run, dan store admin
 ```
 
 ## Environment
@@ -26,23 +20,24 @@ node --experimental-strip-types src/modules/admin/store.check.ts
 |---|---|---|
 | `ADMIN_PASSWORD` | Password login panel `/admin` | `pickmenpack` |
 | `ADMIN_SECRET` | Secret untuk menandatangani cookie sesi admin | `<password>-dev-secret` |
+| `DB_PATH` | Lokasi file SQLite | `data/pickmenpack.db` |
 
-Set keduanya sebelum deploy.
+Set `ADMIN_PASSWORD` dan `ADMIN_SECRET` sebelum deploy.
 
 ## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── (site)/            # halaman publik: /, /katalog, /request, /cara-bayar, /faq
+│   ├── (site)/            # halaman publik: /, /katalog, /request, /cara-bayar, /faq, /privacy
 │   └── admin/             # login + panel admin
 ├── components/
 │   ├── layout/            # kerangka halaman
-│   │   ├── site/          # header, footer, bottom nav
+│   │   ├── site/          # header, footer, bottom nav, announcement bar, WA melayang
 │   │   ├── admin/         # sidebar + top bar panel admin
 │   │   └── section.tsx    # container section, dipakai dua-duanya
-│   ├── shared/            # komponen reusable lintas modul (page header, stat card, empty)
-│   └── ui/                # khusus primitive shadcn/ui (belum dipasang)
+│   ├── shared/            # komponen reusable lintas modul (slider, page header, stat card, empty)
+│   └── ui/                # khusus primitive shadcn/ui (button, accordion, carousel)
 ├── lib/                   # konstanta brand/WhatsApp, format rupiah & tanggal, class token UI
 └── modules/               # admin, catalog, faq, home, payment, request, testimonial
     └── <modul>/
@@ -50,7 +45,7 @@ src/
         └── *.ts           # data, tipe, server action, logika bisnis
 ```
 
-Data katalog, testimoni, FAQ, dan pesanan masih dummy/in-memory. Rincian apa yang sudah dan belum ada: [documents/IMPLEMENTATION-STATUS.md](documents/IMPLEMENTATION-STATUS.md).
+Data tersimpan di SQLite (`data/`, diabaikan git). Katalog, testimoni, FAQ, dan pesanan awal masih seed dummy. Rincian apa yang sudah dan belum ada: [documents/IMPLEMENTATION-STATUS.md](documents/IMPLEMENTATION-STATUS.md).
 
 ## Documentation
 
