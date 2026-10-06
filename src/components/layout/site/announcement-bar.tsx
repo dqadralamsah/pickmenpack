@@ -12,7 +12,7 @@ export function AnnouncementBar() {
             See how
           </Link>
         </p>
-        <p className="hidden shrink-0 text-paper/70 sm:block">COD around {site.serviceArea} · Insured delivery everywhere else</p>
+        <p className="hidden shrink-0 text-paper/70 sm:block">COD around {site.serviceArea} · Tracked delivery everywhere else</p>
       </div>
     </div>
   );

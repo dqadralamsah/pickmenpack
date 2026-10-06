@@ -11,6 +11,9 @@ export type StoreRun = {
   payBy: Date; // Sabtu 09.00 WIB
   shop: Date; // Sabtu
   ship: Date; // Minggu (fallback Senin)
+  /** false dari lewat cutoff (Jumat 00.00) sampai run minggu ini selesai (Sabtu
+   *  23.59): request baru ikut run minggu depan (Landing Page Content 4.1). */
+  open: boolean;
 };
 
 /** Store run yang masih menerima request pada waktu `now`. */
@@ -29,6 +32,7 @@ export function nextStoreRun(now = new Date()): StoreRun {
     payBy: at(2, 9),
     shop: at(2, 10),
     ship: at(3, 10),
+    open: now.getTime() > thu - 5 * DAY + (23 * 60 + 59) * 60_000, // Sabtu 23.59 minggu lalu
   };
 }
 

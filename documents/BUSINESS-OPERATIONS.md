@@ -14,7 +14,7 @@ date: 2026-10-02
 | Project Name | PickmenPack |
 | Document Type | Business Operations — SOP, Policy & Legal |
 | Version | v0.1 |
-| Status | Draft — keputusan Owner 2 Okt 2026, belum dipublish ke Notion |
+| Status | Draft — keputusan Owner 2 Okt 2026, dipublish ke Notion 2 Okt 2026 |
 | Owner | Dicky Qadr Alamsah |
 | Related Document | Business & Market Research (vault) v1.0 · [PRD](PRD.md) v1.1 · Unit Economics (vault) |
 | Primary Purpose | Aturan main operasional PickmenPack sehari-hari: siklus mingguan, kebijakan harga/stok/refund/retur, rekening, dan legalitas dasar |

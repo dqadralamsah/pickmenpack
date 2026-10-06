@@ -42,3 +42,6 @@ next-env.d.ts
 
 # sqlite database (request & pesanan)
 /data/
+
+# referensi screenshot / bahan desain lokal
+/references/

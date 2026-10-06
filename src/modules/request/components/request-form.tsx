@@ -25,9 +25,17 @@ function FieldError({ id, msg }: { id: string; msg?: string }) {
   ) : null;
 }
 
-export function RequestForm({ defaultItem = "", waNumber }: { defaultItem?: string; waNumber: string }) {
+export function RequestForm({
+  defaultItem = "",
+  defaultSize = "",
+  waNumber,
+}: {
+  defaultItem?: string;
+  defaultSize?: string;
+  waNumber: string;
+}) {
   const [item, setItem] = useState(defaultItem);
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState(defaultSize);
   const [price, setPrice] = useState("");
   const [delivery, setDelivery] = useState<Delivery>("cod");
   const [state, action, pending] = useActionState<RequestState, FormData>(submitRequestAction, null);
@@ -73,7 +81,7 @@ export function RequestForm({ defaultItem = "", waNumber }: { defaultItem?: stri
           ))}
         </ol>
 
-        <p className="mt-4 rounded-xl bg-zinc-100 px-4 py-3 text-xs leading-relaxed text-zinc-700">
+        <p className="mt-4 rounded-xl bg-info-soft px-4 py-3 text-xs leading-relaxed text-zinc-700">
           Please double-check your size: <strong>wrong-size items can&rsquo;t be returned or exchanged</strong>.
           We send the brand&rsquo;s official size chart together with your final price.
         </p>
@@ -281,7 +289,7 @@ export function RequestForm({ defaultItem = "", waNumber }: { defaultItem?: stri
             {(
               [
                 ["cod", `COD ${site.serviceArea}`, "Free, handed over in person"],
-                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, insured`],
+                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, tracked`],
               ] as const
             ).map(([value, title, note]) => (
               <label

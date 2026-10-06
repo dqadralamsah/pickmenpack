@@ -14,14 +14,14 @@ date: 2026-09-22
 | Project Name | PickmenPack |
 | Brand Name | PickmenPack — satu nama untuk platform & yang tampil ke customer (nama ganda "Soletip" resmi digabung jadi satu di v1.0) |
 | Document Type | Product Requirements Document (PRD) |
-| Version | v1.1 |
-| Status | Draft — v1.0 restrukturisasi total (22 Sep 2026), v1.1 menuangkan keputusan operasional 2 Okt 2026. Belum dipublish ke Notion (Notion masih v1.8, isinya sudah jauh beda dari sini) |
+| Version | v1.2 |
+| Status | Draft — v1.0 restrukturisasi total (22 Sep 2026), v1.1 menuangkan keputusan operasional 2 Okt 2026, v1.2 merujuk copy landing ke dokumen 03 (5 Okt 2026). Dipublish ke Notion 2 Okt 2026 |
 | Owner | Dicky Qadr Alamsah |
 | Stakeholders | Dicky Qadr Alamsah (Owner & Operator solo — tidak ada reviewer/approver lain di Fase 1) |
 | Target Release (MVP) | Awal Desember 2026 (sebelum puncak promo Natal & Tahun Baru) |
 | Related Portfolio Project | Goposystem (KonserPO) — project terpisah, dicatat sebagai konteks kapasitas waktu solo di bulan Desember 2026 |
 | Related Document | Business & Market Research (vault) v1.0 — riset kompetitor, persona, simulasi fee, dan strategi marketing. Operasional harian, kebijakan refund/retur & legal: [Business Operations](BUSINESS-OPERATIONS.md). Biaya: Unit Economics (vault). Status pengerjaan kode: [Implementation Status](IMPLEMENTATION-STATUS.md) |
-| Source of Truth | Notion — [PRD v1.8](https://app.notion.com/p/3bb5b010daef81ce9dc7d76446453019) (terakhir diubah 3 Sep 2026), akan diganti total begitu v1.0 ini dipublish |
+| Source of Truth | Notion — [PRD v1.1](https://app.notion.com/p/3bb5b010daef81ce9dc7d76446453019) |
 | Primary Purpose | Acuan bisnis dan pengembangan produk untuk jastip sepatu PickmenPack |
 
 > [!info] Product Requirements Document (PRD) — PickmenPack
@@ -140,8 +140,8 @@ Semua barang dibeli langsung di gerai resmi/counter di Mall JPO, bukan reseller 
 > [!note] Aturan penting: fee dihitung dari harga NET final
 > *Fee selalu dihitung dari harga NET final yang sudah dikonfirmasi (bukan dari harga awal sebelum diskon) — karena diskon di toko sering berlapis dan "hingga X%" bukan angka pasti. Karena di model v1.0 harga dikonfirmasi dulu sebelum customer bayar (Section 5.5), fee yang ditagihkan ke customer sudah pasti sejak awal, bukan lagi estimasi yang bisa berubah di invoice final. Simulasi lengkap ada di Business & Market Research (vault) Section 5.2 dan 5.5.*
 
-> [!warning] Copy landing perlu diperbaiki
-> Kartu "Flat fee, never a percentage" dan hero "the fee is fixed before we buy" di kode kontradiksi dengan tier di atas Rp1jt yang berbasis persentase. Copy perlu diganti supaya jujur soal skema tiered tanpa bilang flat/persentase secara spesifik — sudah diputuskan (22 Sep 2026), tinggal implementasi. Lihat [Implementation Status](IMPLEMENTATION-STATUS.md) gap #5.
+> [!note] Copy fee di landing
+> Copy lama "Flat fee, never a percentage" sudah diganti (resolved, [Implementation Status](IMPLEMENTATION-STATUS.md) gap #5). Landing sekarang menulis "Service fee from Rp25k per item", tanpa menyebut flat/persentase — aturannya ada di Landing Page Content (vault) Section 8.
 
 ## 5.5 Alur Pembayaran — Cek Dulu, Baru Bayar Penuh
 
@@ -211,8 +211,8 @@ Kenapa tetap dikumpulkan jadi satu store run per minggu (bukan beli satuan tiap 
 - Info Cara Pembayaran & Rekening/QRIS Tujuan.
 - Halaman FAQ & Kebijakan (refund, salah ukuran tidak bisa retur, estimasi waktu proses, kebijakan struk pada belanja kolektif). *(Kebijakan DP dihapus dari FAQ — sudah tidak relevan di model v1.0.)*
 - Halaman Testimoni/Portfolio.
-- Komponen "Belanja Kolektif" di landing page (penjelasan mekanisme store run mingguan + kebijakan harga per-item).
-- Info jadwal store run berikutnya + cutoff request (ditampilkan di landing page & halaman cara bayar).
+- Landing page tiga section inti — **Why PickmenPack**, **How it works** (proses + jadwal store run bertanggal otomatis), dan **Pricing** (harga per-item, fee, harga dikunci, kebijakan struk). Copy final, urutan section, dan logika tanggal ada di Landing Page Content (vault).
+- Info jadwal store run berikutnya + cutoff request (landing page, halaman cara bayar, halaman konfirmasi) — semua memakai perhitungan tanggal yang sama (Landing Page Content Section 4.1).
 - Template Invoice Final dengan rincian perhitungan (harga item → diskon toko → harga net → fee).
 
 ## 6.2 Out of Scope (Fase 1)
@@ -283,8 +283,8 @@ Kenapa tetap dikumpulkan jadi satu store run per minggu (bukan beli satuan tiap 
 | Rata-rata waktu respons ke customer | &lt; 2 jam di jam operasional |
 | Repeat customer rate | Dicatat sebagai indikator kepercayaan, belum ditarget angka pasti di Fase 1 |
 
-> [!warning] Definisi konversi perlu disamakan dengan kode
-> Dashboard admin saat ini menghitung konversi dari `selesai / total`, sedangkan target di atas mengukur "request → order terbayar" (mis. status "dibayar" atau lebih lanjut, tidak termasuk batal sebelum bayar). Lihat [Implementation Status](IMPLEMENTATION-STATUS.md) gap #7.
+> [!note] Definisi konversi di kode
+> Dashboard admin menghitung "Konversi terbayar" = request berstatus `dibayar` atau lebih lanjut (`dibeli`, `dikirim`, `selesai`) dibagi total request — sama dengan target di atas (resolved, [Implementation Status](IMPLEMENTATION-STATUS.md) gap #7).
 
 ---
 
@@ -320,3 +320,4 @@ Kenapa tetap dikumpulkan jadi satu store run per minggu (bukan beli satuan tiap 
 |---|---|---|
 | v1.0 | 22 Sep 2026 | Restrukturisasi total dari v1.9, mulai dari nol atas permintaan Owner. (1) Format mengikuti checklist skill dokumentasi terbaru: Background, Goals & Non-Goals, Target Users & Personas, User Stories, Non-Functional Requirements ditambahkan; Timeline & Milestones dihapus (bukan bagian PRD); field Stakeholders ditambah di Document Control; tabel brainstorm nama alternatif (brand & aplikasi) dihapus karena keputusan sudah final. (2) Operator Fase 1 solo — final, bukan lagi asumsi terbuka. (3) Request resmi disimpan ke database sejak Fase 1 (Section 6.1). (4) Brand digabung jadi satu nama, PickmenPack, untuk platform maupun customer-facing (nama "Soletip" tidak dipakai lagi); UI tetap bahasa Inggris. (5) Model pembayaran diganti total dari DP 50%+talangan menjadi cek ketersediaan & harga dulu → customer transfer penuh → baru barang dibeli & dikemas (Section 5.5) — menghilangkan risiko talangan dan mekanisme selisih estimasi-vs-final. (6) Kategori Sandals/Slides (termasuk Crocs) dan Apparel resmi masuk Fase 1, tidak lagi ditunda ke Fase 2 (Section 5.6). (7) Copy "flat fee, never a percentage" ditandai untuk diperbaiki, bukan mengubah skema fee. (8) Belanja Kolektif disederhanakan: store run mingguan dengan window 5–7 hari, harga per-item mengikuti diskon toko untuk item itu sendiri (bukan lagi alokasi proporsional dari tier minimum-belanja gabungan). (9) Open Questions dirapikan: yang sudah terjawab (operator, penyimpanan request, nama & bahasa, jadwal store run, basis alokasi, ekspedisi) dihapus dari daftar; ditambah 2 pertanyaan baru soal batas waktu konfirmasi bayar dan kompensasi waktu admin. |
 | v1.1 | 2 Okt 2026 | Keputusan operasional Owner: (1) jalur Corporate/Bulk dihapus dari Fase 1 — pesanan banyak ikut aturan biasa, bayar penuh tanpa tempo (Section 3, 4, 5.7, 6.1, 6.2); (2) katalog pakai rentang harga, harga pasti dicek Jumat via kontak toko yang didapat di store run pertama (Section 5.5); (3) tidak ada biaya kalau batal sebelum transfer — Open Question #4 resolved; (4) mitigasi risiko diperbarui mengikuti siklus mingguan & kebijakan refund; (5) checkbox Kebijakan Privasi di form; (6) referensi ke dokumen baru Business Operations & Unit Economics. |
+| v1.2 | 5 Okt 2026 | Section 6.1: komponen "Belanja Kolektif" dan section jadwal mingguan terpisah diganti tiga section landing (Why, How it works bertanggal, Pricing) yang copy-nya diatur di dokumen baru Landing Page Content. Koreksi 6 Okt 2026 (sebelum publish ke Notion): callout copy fee (Section 5.4) dan definisi konversi (Section 8) diubah dari warning jadi catatan resolved, mengikuti kode commit `f29d642`. |
