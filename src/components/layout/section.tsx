@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/shared/icons";
 
 /** Container standar untuk satu blok halaman: lebar maksimum, padding responsif,
  *  dan kepala section (judul + deskripsi + aksi) yang seragam. */
@@ -68,10 +69,10 @@ export function SeeAll({ href, label = "See all" }: { href: string; label?: stri
   return (
     <Link
       href={href}
-      className="inline-flex min-h-10 shrink-0 items-center gap-1 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline"
+      className="group inline-flex min-h-10 shrink-0 items-center gap-1.5 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline"
     >
       {label}
-      <span aria-hidden>&rsaquo;</span>
+      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
     </Link>
   );
 }

@@ -31,25 +31,27 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         )}
       </div>
 
-      {colors.length > 1 && (
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500">
-          {colors.slice(0, 4).map((c) => (
-            <span
-              key={c.name}
-              aria-hidden
-              className="h-3 w-3 rounded-full ring-1 ring-zinc-300"
-              style={{ backgroundColor: c.hex }}
-            />
-          ))}
-          <span>{colors.length} colours</span>
-        </p>
-      )}
+      {/* Baris warna selalu dirender (tinggi tetap) supaya nama & harga sejajar
+          antar kartu, ada titik warna atau tidak. */}
+      <p className="mt-3 flex h-4 items-center gap-1.5 text-xs text-zinc-500">
+        {colors.length > 1 && (
+          <>
+            {colors.slice(0, 4).map((c) => (
+              <span
+                key={c.name}
+                aria-hidden
+                className="h-3 w-3 rounded-full ring-1 ring-zinc-300"
+                style={{ backgroundColor: c.hex }}
+              />
+            ))}
+            <span>{colors.length} colours</span>
+          </>
+        )}
+      </p>
 
       {/* min-h dikunci supaya nama 1 vs 2 baris gak bikin grid bergeser. */}
       <h3
-        className={`line-clamp-2 min-h-[2.5rem] font-sans text-sm leading-5 tracking-normal transition-colors duration-200 group-hover:text-accent-dark ${
-          colors.length > 1 ? "mt-1.5" : "mt-3"
-        }`}
+        className="mt-1.5 line-clamp-2 min-h-[2.5rem] font-sans text-sm leading-5 tracking-normal transition-colors duration-200 group-hover:text-accent-dark"
       >
         {product.brand} {product.name}
       </h3>

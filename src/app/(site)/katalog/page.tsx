@@ -11,6 +11,7 @@ export default async function KatalogPage({ searchParams }: PageProps<"/katalog"
   return (
     <>
       <PageHero
+        eyebrow="Official stores · checked in person"
         title="Shop"
         desc="Live deals from the official stores — exact price confirmed before you pay."
       />

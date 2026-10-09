@@ -29,22 +29,3 @@ export function estimateTotal(netPrice: number, delivery: Delivery): Range {
     max: netPrice + fee.max + ongkir.max,
   };
 }
-
-/**
- * @deprecated PRD v1.0 5.8: harga per-item sesuai diskon toko, bukan proporsional.
- * Cuma dipakai `home/components/group-buy.tsx` (tidak lagi dipasang di halaman) — hapus bareng file itu.
- *
- * Diskon kolektif (PRD 2.6): potongan tier "minimum belanja" yang didapat dari
- * satu transaksi gabungan, dibagi proporsional ke tiap pesanan yang ikut.
- * Sisa pembulatan dibebankan ke pesanan terbesar supaya total alokasi persis
- * sama dengan potongan yang didapat di kasir.
- */
-export function allocateGroupDiscount(netPrices: number[], discount: number): number[] {
-  const total = netPrices.reduce((a, b) => a + b, 0);
-  if (total <= 0 || discount <= 0) return netPrices.map(() => 0);
-
-  const shares = netPrices.map((n) => Math.round((n / total) * discount));
-  const drift = discount - shares.reduce((a, b) => a + b, 0);
-  shares[netPrices.indexOf(Math.max(...netPrices))] += drift;
-  return shares;
-}

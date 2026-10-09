@@ -11,7 +11,7 @@ import { estimateFee, estimateTotal, ONGKIR, type Delivery } from "../fee";
 import { nextStoreRun, runDay, runTime } from "../store-run";
 
 
-const sizePreset = ["38", "39", "40", "41", "42", "43", "44"];
+const sizePreset = ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"];
 
 const range = (r: { min: number; max: number }) =>
   r.min === r.max ? rupiah(r.min) : `${rupiah(r.min)} – ${rupiah(r.max)}`;
@@ -25,18 +25,42 @@ function FieldError({ id, msg }: { id: string; msg?: string }) {
   ) : null;
 }
 
+/** Judul tiap kelompok field: nomor bulat + judul + keterangan singkat. */
+function Step({ n, title, desc }: { n: number; title: string; desc?: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span
+        aria-hidden
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-bold text-accent-dark"
+      >
+        {n}
+      </span>
+      <div>
+        <h2 className="font-sans text-base font-semibold tracking-normal">{title}</h2>
+        {desc && <p className="mt-0.5 text-xs text-zinc-500">{desc}</p>}
+      </div>
+    </div>
+  );
+}
+
+const groupCls = "space-y-4 border-t border-zinc-200 pt-6";
+
 export function RequestForm({
   defaultItem = "",
   defaultSize = "",
+  defaultPrice,
   waNumber,
 }: {
   defaultItem?: string;
   defaultSize?: string;
+  /** Harga promo produk yang dipilih dari katalog — titik awal estimasi. */
+  defaultPrice?: number;
   waNumber: string;
 }) {
   const [item, setItem] = useState(defaultItem);
   const [size, setSize] = useState(defaultSize);
-  const [price, setPrice] = useState("");
+  // Disimpan sebagai digit saja; ditampilkan dengan pemisah ribuan.
+  const [price, setPrice] = useState(defaultPrice ? String(defaultPrice) : "");
   const [delivery, setDelivery] = useState<Delivery>("cod");
   const [state, action, pending] = useActionState<RequestState, FormData>(submitRequestAction, null);
   const [another, setAnother] = useState(false);
@@ -91,7 +115,7 @@ export function RequestForm({
             href={wa}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-whatsapp px-5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-whatsapp-dark"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-action px-5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-action-hover"
           >
             <WhatsAppIcon className="h-4 w-4" />
             Ask something on WhatsApp
@@ -124,217 +148,227 @@ export function RequestForm({
         {/* Honeypot — tersembunyi dari manusia & screen reader. */}
         <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className={label} htmlFor="nama">
-              Name
-            </label>
-            <input id="nama" name="nama" required autoComplete="name" className={field} placeholder="Your name" {...a11y("nama")} />
-            <FieldError id="nama" msg={err.nama} />
-          </div>
-          <div>
-            <label className={label} htmlFor="wa">
-              WhatsApp number
-            </label>
-            <input
-              id="wa"
-              name="wa"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              required
-              className={field}
-              placeholder="08xxxxxxxxxx"
-              {...a11y("wa")}
-            />
-            <FieldError id="wa" msg={err.wa} />
-          </div>
-        </div>
-
-        <div>
-          <label className={label} htmlFor="kota">
-            City
-          </label>
-          <input
-            id="kota"
-            name="kota"
-            required
-            autoComplete="address-level2"
-            className={field}
-            placeholder="e.g. Tangerang"
-            {...a11y("kota")}
-          />
-          <FieldError id="kota" msg={err.kota} />
-        </div>
-
-        <div>
-          <label className={label} htmlFor="item">
-            What should we buy?
-          </label>
-          <input
-            id="item"
-            name="item"
-            required
-            value={item}
-            onChange={(e) => setItem(e.target.value)}
-            className={field}
-            placeholder="e.g. Nike Revolution 7"
-            {...a11y("item")}
-          />
-          <FieldError id="item" msg={err.item} />
-        </div>
-
-        <div>
-          <label className={label} htmlFor="ukuran">
-            Size
-          </label>
-          <div className="no-scrollbar -mx-4 mb-2 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0">
-            {sizePreset.map((u) => (
-              <button
-                key={u}
-                type="button"
-                aria-pressed={size === u}
-                onClick={() => setSize(u)}
-                className={`h-11 w-12 shrink-0 cursor-pointer rounded-lg border text-sm font-medium transition-colors duration-200 ${
-                  size === u
-                    ? "border-ink bg-ink text-paper"
-                    : "border-zinc-300 bg-white text-ink hover:border-ink"
-                }`}
-              >
-                {u}
-              </button>
-            ))}
-          </div>
-          <input
-            id="ukuran"
-            name="ukuran"
-            required
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            className={field}
-            placeholder="Or type another size (e.g. 37.5 / US 9)"
-            {...a11y("ukuran")}
-          />
-          <FieldError id="ukuran" msg={err.ukuran} />
-          <div className="mt-3 flex items-center gap-3">
-            <label htmlFor="kakiCm" className="text-xs text-zinc-700">
-              Foot length <span className="text-zinc-600">(optional, helps us check the fit)</span>
-            </label>
-            <div className="relative w-28 shrink-0">
+        <section className="space-y-4">
+          <Step n={1} title="About you" desc="So we can send your final price on WhatsApp." />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className={label} htmlFor="nama">
+                Name
+              </label>
+              <input id="nama" name="nama" required autoComplete="name" className={field} placeholder="Your name" {...a11y("nama")} />
+              <FieldError id="nama" msg={err.nama} />
+            </div>
+            <div>
+              <label className={label} htmlFor="wa">
+                WhatsApp number
+              </label>
               <input
-                id="kakiCm"
-                name="kakiCm"
-                type="number"
-                inputMode="decimal"
-                step={0.5}
-                min={15}
-                max={35}
-                className={`${field} pr-10`}
-                placeholder="26.5"
+                id="wa"
+                name="wa"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                required
+                className={field}
+                placeholder="08xxxxxxxxxx"
+                {...a11y("wa")}
               />
-              <span className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-xs text-zinc-600">
-                cm
-              </span>
+              <FieldError id="wa" msg={err.wa} />
             </div>
           </div>
-        </div>
 
-        <div>
-          <label className={label} htmlFor="harga">
-            Rough item price
-          </label>
-          <div className="relative">
-            <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-base font-semibold text-zinc-700 sm:text-sm">
-              Rp
-            </span>
+          <div>
+            <label className={label} htmlFor="kota">
+              City
+            </label>
             <input
-              id="harga"
-              name="harga"
-              type="number"
-              inputMode="numeric"
-              min={50_000}
-              step={1000}
+              id="kota"
+              name="kota"
               required
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className={`${field} pl-11`}
-              placeholder="750000"
-              {...a11y("harga")}
+              autoComplete="address-level2"
+              className={field}
+              placeholder="e.g. Tangerang"
+              {...a11y("kota")}
+            />
+            <FieldError id="kota" msg={err.kota} />
+          </div>
+        </section>
+
+        <section className={groupCls}>
+          <Step n={2} title="The pair" desc="Model, size and a rough price — we check the rest at the store." />
+
+          <div>
+            <label className={label} htmlFor="item">
+              What should we buy?
+            </label>
+            <input
+              id="item"
+              name="item"
+              required
+              value={item}
+              onChange={(e) => setItem(e.target.value)}
+              className={field}
+              placeholder="e.g. Nike Revolution 7"
+              {...a11y("item")}
+            />
+            <FieldError id="item" msg={err.item} />
+          </div>
+
+          <div>
+            <label className={label} htmlFor="ukuran">
+              Size
+            </label>
+            <p className="mb-2 text-xs text-zinc-500">EU sizes — tap one or type your own below.</p>
+            <div className="no-scrollbar -mx-4 mb-2 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0">
+              {sizePreset.map((u) => (
+                <button
+                  key={u}
+                  type="button"
+                  aria-pressed={size === u}
+                  onClick={() => setSize(u)}
+                  className={`h-11 w-12 shrink-0 cursor-pointer rounded-lg border text-sm font-medium transition-colors duration-200 ${
+                    size === u
+                      ? "border-ink bg-ink text-paper"
+                      : "border-zinc-300 bg-white text-ink hover:border-ink"
+                  }`}
+                >
+                  {u}
+                </button>
+              ))}
+            </div>
+            <input
+              id="ukuran"
+              name="ukuran"
+              required
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+              className={field}
+              placeholder="Or type another size (e.g. 37.5 / US 9)"
+              {...a11y("ukuran")}
+            />
+            <FieldError id="ukuran" msg={err.ukuran} />
+            <div className="mt-3 flex items-center gap-3">
+              <label htmlFor="kakiCm" className="text-xs text-zinc-700">
+                Foot length <span className="text-zinc-600">(optional, helps us check the fit)</span>
+              </label>
+              <div className="relative w-28 shrink-0">
+                <input
+                  id="kakiCm"
+                  name="kakiCm"
+                  type="number"
+                  inputMode="decimal"
+                  step={0.5}
+                  min={15}
+                  max={35}
+                  className={`${field} pr-10`}
+                  placeholder="26.5"
+                />
+                <span className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-xs text-zinc-600">
+                  cm
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className={label} htmlFor="harga">
+              Rough item price
+            </label>
+            <div className="relative">
+              <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-base font-semibold text-zinc-700 sm:text-sm">
+                Rp
+              </span>
+              <input type="hidden" name="harga" value={price} />
+              <input
+                id="harga"
+                inputMode="numeric"
+                autoComplete="off"
+                required
+                value={price ? Number(price).toLocaleString("id-ID") : ""}
+                onChange={(e) => setPrice(e.target.value.replace(/\D/g, "").slice(0, 9))}
+                className={`${field} pl-11 tabular-nums`}
+                placeholder="750.000"
+                {...a11y("harga")}
+              />
+            </div>
+            <FieldError id="harga" msg={err.harga} />
+            <p className={hint}>
+              A number from the catalog range is enough — we check the exact price
+              with the store and confirm it before you pay anything.
+            </p>
+          </div>
+
+          <div>
+            <label className={label} htmlFor="referensi">
+              Reference link <span className="font-normal text-zinc-600">(optional)</span>
+            </label>
+            <input
+              id="referensi"
+              name="referensi"
+              type="url"
+              inputMode="url"
+              className={field}
+              placeholder="Product link or IG post"
             />
           </div>
-          <FieldError id="harga" msg={err.harga} />
-          <p className={hint}>
-            A number from the catalog range is enough — we check the exact price
-            with the store and confirm it before you pay anything.
-          </p>
-        </div>
+        </section>
 
-        <div>
-          <label className={label} htmlFor="referensi">
-            Reference link <span className="font-normal text-zinc-600">(optional)</span>
-          </label>
-          <input
-            id="referensi"
-            name="referensi"
-            type="url"
-            inputMode="url"
-            className={field}
-            placeholder="Product link or IG post"
-          />
-        </div>
+        <section className={groupCls}>
+          <Step n={3} title="Delivery" />
 
-        <fieldset>
-          <legend className={label}>How do you want it delivered?</legend>
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            {(
-              [
-                ["cod", `COD ${site.serviceArea}`, "Free, handed over in person"],
-                ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, tracked`],
-              ] as const
-            ).map(([value, title, note]) => (
-              <label
-                key={value}
-                className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-sm transition-colors duration-200 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${
-                  delivery === value ? "border-ink ring-1 ring-ink" : "border-zinc-300 hover:border-zinc-400"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="delivery"
-                  value={value}
-                  checked={delivery === value}
-                  onChange={() => setDelivery(value)}
-                  className="sr-only"
-                />
-                <span
-                  aria-hidden
-                  className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 border-ink transition-colors ${
-                    delivery === value ? "bg-ink" : "bg-white"
+          <fieldset>
+            <legend className={label}>How do you want it delivered?</legend>
+            <div className="grid gap-2.5 sm:grid-cols-2">
+              {(
+                [
+                  ["cod", `COD ${site.serviceArea}`, "Free, handed over in person"],
+                  ["kirim", "Courier, out of town", `Shipping ${range(ONGKIR.kirim)} · J&T, tracked`],
+                ] as const
+              ).map(([value, title, note]) => (
+                <label
+                  key={value}
+                  className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-sm transition-colors duration-200 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${
+                    delivery === value ? "border-ink ring-1 ring-ink" : "border-zinc-300 hover:border-zinc-400"
                   }`}
-                />
-                <span>
-                  <span className="block font-semibold">{title}</span>
-                  <span className="text-xs text-zinc-500">{note}</span>
-                </span>
-              </label>
-            ))}
+                >
+                  <input
+                    type="radio"
+                    name="delivery"
+                    value={value}
+                    checked={delivery === value}
+                    onChange={() => setDelivery(value)}
+                    className="sr-only"
+                  />
+                  <span
+                    aria-hidden
+                    className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 border-ink transition-colors ${
+                      delivery === value ? "bg-ink" : "bg-white"
+                    }`}
+                  />
+                  <span>
+                    <span className="block font-semibold">{title}</span>
+                    <span className="text-xs text-zinc-500">{note}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div>
+            <label className={label} htmlFor="catatan">
+              Notes <span className="font-normal text-zinc-600">(optional)</span>
+            </label>
+            <textarea
+              id="catatan"
+              name="catatan"
+              rows={3}
+              className={field}
+              placeholder="Colour, backup size, anything else."
+            />
           </div>
-        </fieldset>
+        </section>
 
-        <div>
-          <label className={label} htmlFor="catatan">
-            Notes <span className="font-normal text-zinc-600">(optional)</span>
-          </label>
-          <textarea
-            id="catatan"
-            name="catatan"
-            rows={3}
-            className={field}
-            placeholder="Colour, backup size, anything else."
-          />
-        </div>
-
-        <div>
+        <div className="rounded-xl bg-zinc-50 p-3.5">
           <label className="flex cursor-pointer items-start gap-3 text-sm">
             <input
               type="checkbox"
@@ -373,7 +407,7 @@ export function RequestForm({
             <dd className="text-right">{delivery === "cod" ? "Free" : range(ONGKIR.kirim)}</dd>
           </div>
           <div className="flex justify-between gap-3 border-t border-zinc-300 pt-3 text-base font-bold">
-            <dt>Estimated total</dt>
+            <dt className="shrink-0">Estimated total</dt>
             <dd className="text-right">{netPrice ? range(total) : "—"}</dd>
           </div>
         </dl>

@@ -13,8 +13,8 @@ date: 2026-09-22
 |---|---|
 | Project Name | PickmenPack |
 | Document Type | Business Flow — Order Journey |
-| Version | v1.3 |
-| Status | Draft — v1.2 sinkron ke Notion 2 Okt 2026; v1.3 (as-built dari kode `f29d642`) belum dipublish |
+| Version | v1.4 |
+| Status | Draft — v1.2 sinkron ke Notion 2 Okt 2026; v1.4 dipublish ke Notion 9 Okt 2026 |
 | Owner | Dicky Qadr Alamsah |
 | Related Document | [PRD](PRD.md) Section 5.5 dan 5.8, [Implementation Status](IMPLEMENTATION-STATUS.md) |
 | Primary Purpose | Membandingkan alur order yang direncanakan di PRD dengan alur yang benar-benar dijalankan aplikasi saat ini |
@@ -94,7 +94,7 @@ Alur di kode sudah sama dengan target. Semua jadwal (cutoff Kamis 23.59, cek har
 | Pembayaran | Transfer **penuh** setelah harga dikonfirmasi | Sesuai — halaman cara bayar, FAQ, dan pesan WA menyebut bayar penuh tanpa DP | ✅ Sesuai |
 | Pembelian barang | Admin beli **setelah** transfer diterima | Sesuai urutan status: `dibayar` → `dibeli` | ✅ Sesuai |
 | Store run | Mingguan, harga per-item sesuai diskon toko | Jadwal mingguan otomatis; order menyimpan cutoff run. Panel belum mengelompokkan order per run | 🟡 Cukup untuk Fase 1 — filter per run bisa ditambah kalau order banyak |
-| Selisih harga | Tidak ada — harga final sebelum bayar | Tidak ada logika selisih di alur. Fungsi lama `allocateGroupDiscount` masih tertinggal di `fee.ts` tanpa pemakai | 🟡 Hapus dead code (Implementation Status gap #19) |
+| Selisih harga | Tidak ada — harga final sebelum bayar | Tidak ada logika selisih di alur. Fungsi lama `allocateGroupDiscount` sudah dihapus (9 Okt 2026) | ✅ Sesuai (Implementation Status gap #19 resolved) |
 | Pengiriman | COD lokal atau J&T (TIKI alternatif) | COD atau kirim; ongkir estimasi Rp30rb–55rb, ekspedisi tidak dipilih di form | ✅ Cukup — ekspedisi dikonfirmasi di WhatsApp |
 
 ---
@@ -125,3 +125,4 @@ Warna status konsisten dengan [PRD](PRD.md) Section 7.4: kuning untuk menunggu/p
 | v1.1 | 22 Sep 2026 | Target Journey ditulis ulang mengikuti PRD v1.0 Section 5.5 (model pembayaran baru tanpa DP: cek dulu, baru bayar penuh, baru beli & kemas). Delta table diperbarui — sekarang delta-nya lebih besar karena kode belum diubah dari model lama. Tambah catatan gap baru soal penamaan status `dp` yang tidak lagi sesuai dengan model baru. |
 | v1.2 | 2 Okt 2026 | Target Journey mengikuti PRD v1.1: cabang Corporate/Bulk dihapus, langkah cek harga & kirim harga dijadwalkan Jumat (Business Operations Section 2). Delta baris Pengajuan diperbarui. |
 | v1.3 | 6 Okt 2026 | As-Built ditulis ulang dari kode commit `f29d642`: request tersimpan ke SQLite, alur tanpa DP, jadwal store run otomatis, layar konfirmasi. Delta diringkas — sebagian besar baris sekarang sesuai; sisa gap: pesan harga final masih rentang (#18) dan dead code `allocateGroupDiscount` (#19). Lifecycle status diganti ke enum baru (`baru`, `dikonfirmasi`, `dibayar`, `dibeli`, `dikirim`, `selesai`, `batal`); callout soal status `dp` dihapus karena sudah resolved. |
+| v1.4 | 9 Okt 2026 | Delta baris Selisih harga: dead code `allocateGroupDiscount` sudah dihapus, gap #19 resolved. Form request kini dikelompokkan tiga langkah dan harga terisi dari detail produk (alur tidak berubah). Dipublish ke Notion. |

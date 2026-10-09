@@ -39,15 +39,15 @@ export default function Home() {
 
       {/* Tiga section dari vault "Landing Page Content": kenapa percaya → prosesnya
           & kapan → uangnya dihitung bagaimana. Satu fakta cuma di satu section. */}
-      <Section id="why" title={homeContent.why.title} desc={homeContent.why.subtitle}>
+      <Section id="why" eyebrow="Why us" title={homeContent.why.title} desc={homeContent.why.subtitle}>
         <Why />
       </Section>
 
-      <Section id="how-it-works" title={homeContent.howItWorks.title} desc={homeContent.howItWorks.subtitle}>
+      <Section id="how-it-works" eyebrow="The weekly run" title={homeContent.howItWorks.title} desc={homeContent.howItWorks.subtitle}>
         <HowItWorks />
       </Section>
 
-      <Section id="pricing" title={homeContent.pricing.title} desc={homeContent.pricing.subtitle}>
+      <Section id="pricing" eyebrow="No surprises" title={homeContent.pricing.title} desc={homeContent.pricing.subtitle}>
         <Pricing />
       </Section>
 
@@ -55,7 +55,7 @@ export default function Home() {
         <TestimonialList />
       </Section>
 
-      <Section eyebrow="FAQ" title="Good questions" action={<SeeAll href="/faq" label="See all" />}>
+      <Section eyebrow="FAQ" title="Good questions" action={<SeeAll href="/faq" />}>
         <FaqList items={faqs.slice(0, 5)} />
       </Section>
 

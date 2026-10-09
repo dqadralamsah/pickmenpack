@@ -15,7 +15,7 @@ date: 2026-09-22
 | Brand Name | PickmenPack — satu nama untuk platform & yang tampil ke customer (nama ganda "Soletip" resmi digabung jadi satu di v1.0) |
 | Document Type | Product Requirements Document (PRD) |
 | Version | v1.2 |
-| Status | Draft — v1.0 restrukturisasi total (22 Sep 2026), v1.1 menuangkan keputusan operasional 2 Okt 2026, v1.2 merujuk copy landing ke dokumen 03 (5 Okt 2026). Dipublish ke Notion 2 Okt 2026 |
+| Status | Draft — v1.0 restrukturisasi total (22 Sep 2026), v1.1 menuangkan keputusan operasional 2 Okt 2026, v1.2 merujuk copy landing ke dokumen 03 (5 Okt 2026). v1.1 dipublish ke Notion 2 Okt 2026, v1.2 pada 9 Okt 2026 |
 | Owner | Dicky Qadr Alamsah |
 | Stakeholders | Dicky Qadr Alamsah (Owner & Operator solo — tidak ada reviewer/approver lain di Fase 1) |
 | Target Release (MVP) | Awal Desember 2026 (sebelum puncak promo Natal & Tahun Baru) |
