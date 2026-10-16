@@ -21,11 +21,17 @@ export default async function RequestPage(props: PageProps<"/request">) {
   return (
     <>
       <PageHero
+        eyebrow="Takes 2 minutes · nothing to pay yet"
         title="Request a pair"
         desc="Fill in the details and the estimate updates as you type. We check stock and the exact price with the store first."
       />
       <Section className="!pt-6">
-        <RequestForm defaultItem={defaultItem} defaultSize={defaultSize} waNumber={waNumber} />
+        <RequestForm
+          defaultItem={defaultItem}
+          defaultSize={defaultSize}
+          defaultPrice={picked?.pricePromo}
+          waNumber={waNumber}
+        />
       </Section>
     </>
   );

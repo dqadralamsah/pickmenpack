@@ -35,7 +35,7 @@ export async function submitRequestAction(_: RequestState, f: FormData): Promise
   if (!input.kota) errors.kota = "We need your city to plan delivery.";
   if (!input.item) errors.item = "Which pair should we look for?";
   if (!input.ukuran) errors.ukuran = "Pick or type a size.";
-  if (input.estimasi < 50_000 || input.estimasi > 100_000_000) errors.harga = "Enter a rough price from Rp50,000.";
+  if (input.estimasi < 50_000 || input.estimasi > 100_000_000) errors.harga = "Enter a rough price from Rp50.000.";
   if (f.get("consent") !== "on") errors.consent = "Please agree to the privacy policy so we can store your request.";
   if (Object.keys(errors).length) return { ok: false, errors };
 

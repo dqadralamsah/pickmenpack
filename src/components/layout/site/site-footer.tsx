@@ -82,7 +82,7 @@ function Social({ href, label, handle, children }: { href: string; label: string
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 border-t border-zinc-200 bg-zinc-50 sm:mt-24">
+    <footer className="mt-8 border-t border-zinc-200 bg-zinc-50 sm:mt-12">
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 pt-12 pb-24 sm:grid-cols-2 sm:px-6 sm:pt-16 lg:grid-cols-[1.3fr_0.9fr_1.1fr_1fr_1.5fr]">
         <div className="sm:col-span-2 lg:col-span-1">
           <Logo />

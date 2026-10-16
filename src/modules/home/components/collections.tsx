@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "@/components/shared/icons";
-import { Section } from "@/components/layout/section";
+import { Section, SeeAll } from "@/components/layout/section";
 import { tones, type Tone } from "@/lib/tones";
 import { products, type Category } from "@/modules/catalog/data";
 import { ProductGrid } from "@/modules/catalog/components/product-grid";
@@ -61,14 +61,16 @@ export function Collections() {
 
 const brands = [...new Set(products.map((p) => p.brand))];
 
-/** Brand focus: lingkaran dengan wordmark — diganti logo begitu aset tersedia. */
+/** Brand focus: lingkaran dengan wordmark — diganti logo begitu aset tersedia.
+ *  Satu baris yang bisa di-scroll (bukan grid yang menyisakan baris yatim);
+ *  di layar lebar semua brand muat dan barisnya rata kiri-kanan. */
 export function BrandFocus() {
   return (
-    <ul className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-8 sm:gap-4 sm:px-0">
+    <ul className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:gap-4 sm:px-6 xl:mx-0 xl:gap-3 xl:overflow-visible xl:px-0">
       {brands.map((b) => (
-        <li key={b} className="w-20 shrink-0 sm:w-auto">
+        <li key={b} className="w-20 shrink-0 sm:w-24 xl:w-auto xl:min-w-0 xl:flex-1 xl:shrink">
           <Link href={`/katalog?brand=${encodeURIComponent(b)}`} className="group block rounded-full text-center">
-            <span className="mx-auto flex aspect-square w-full max-w-24 items-center justify-center rounded-full border border-zinc-200 bg-white px-2 text-[11px] font-bold tracking-wide uppercase transition-colors duration-200 group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
+            <span className="flex aspect-square w-full items-center justify-center rounded-full border border-zinc-200 bg-zinc-50 px-1.5 text-[10px] leading-tight font-bold tracking-wide uppercase transition-colors duration-200 group-hover:border-ink group-hover:bg-ink group-hover:text-paper sm:text-[11px]">
               {b}
             </span>
           </Link>
@@ -140,11 +142,15 @@ function ShowcaseBanner({ s }: { s: Showcase }) {
           <Sneaker className="absolute right-[4%] bottom-[12%] w-[46%] -rotate-6 text-ink transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:-translate-y-2 group-hover:-rotate-10 sm:w-[30%] lg:w-[24%]" />
         </>
       )}
-      <span className="absolute top-5 left-5 max-w-[55%] font-heading text-xl leading-tight font-bold text-balance sm:top-7 sm:left-8 sm:text-3xl">
-        {s.headline}
-      </span>
-      <span className="absolute bottom-5 left-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-paper transition-colors duration-200 group-hover:bg-zinc-800 sm:bottom-7 sm:left-8">
-        Shop {s.title.toLowerCase()} <ArrowRight className="h-4 w-4" />
+      {/* Judul + tombol satu kelompok di tengah kiri — tidak menyisakan ruang
+          kosong besar di antara keduanya pada banner yang lebar. */}
+      <span className="absolute inset-y-0 left-5 flex max-w-[55%] flex-col items-start justify-center gap-4 sm:left-8 sm:gap-5 lg:left-10">
+        <span className="font-heading text-xl leading-tight font-bold text-balance sm:text-3xl lg:text-4xl">
+          {s.headline}
+        </span>
+        <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-paper transition-colors duration-200 group-hover:bg-zinc-800">
+          Shop {s.title.toLowerCase()} <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+        </span>
       </span>
     </Link>
   );
@@ -160,14 +166,7 @@ export function CategoryShowcase() {
           title={s.title}
           desc={s.desc}
           className="!py-6 sm:!py-8"
-          action={
-            <Link
-              href={s.href}
-              className="inline-flex min-h-10 shrink-0 items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline"
-            >
-              View all <ArrowRight className="h-4 w-4" />
-            </Link>
-          }
+          action={<SeeAll href={s.href} label="View all" />}
         >
           <ShowcaseBanner s={s} />
           {/* Rak produk kategori: selalu 2 baris (6 kolom × 2 di layar lebar). */}

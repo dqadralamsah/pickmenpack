@@ -13,16 +13,16 @@ date: 2026-09-22
 |---|---|
 | Project Name | PickmenPack |
 | Document Type | Implementation Status & Gap Analysis |
-| Version | v1.2 |
-| Status | Living Document — snapshot 21 Sep 2026, diperbarui 22 Sep 2026 (PRD v1.0) dan 6 Okt 2026 (audit ulang kode terhadap PRD v1.2) |
+| Version | v1.3 |
+| Status | Living Document — snapshot 21 Sep 2026, diperbarui 22 Sep 2026 (PRD v1.0), 6 Okt 2026 (audit ulang kode terhadap PRD v1.2), dan 9 Okt 2026 (UI shop, detail produk, form request) |
 | Owner | Dicky Qadr Alamsah |
-| Baseline | [PRD](PRD.md) v1.2 · Landing Page Content (vault) v0.2 |
-| Code Snapshot | Repo `pickmenpack`, branch `development`, commit `f29d642` ("feat: landing sections from content spec, category shelves, design system doc") |
+| Baseline | [PRD](PRD.md) v1.2 · Landing Page Content (vault) v0.3 |
+| Code Snapshot | Repo `pickmenpack`, branch `development`, commit `bf79bc7` + perapian UI 9 Okt 2026 (commit sesudahnya) |
 | Authoring Location | Repo (`documents/IMPLEMENTATION-STATUS.md`) — salinan ini di vault dibuat dari file repo, jangan diedit di sini |
 | Primary Purpose | Mencatat apa yang sudah dibangun dibanding PRD, apa yang belum, dan ketidakselarasan yang harus dibereskan sebelum go-live |
 
 > [!info] Implementation Status — PickmenPack
-> *Peta antara requirement di PRD dan kode yang sudah jalan: mana yang selesai, mana yang sebagian, mana yang belum disentuh, plus daftar gap dan checklist go-live. v1.2 mengaudit ulang kode setelah tiga commit (`936ea6b`, `a873aac`, `f29d642`): request sekarang tersimpan ke database SQLite, alur pembayaran sudah tanpa DP, jadwal store run bertanggal sudah jalan, dan landing mengikuti Landing Page Content. Sisa pekerjaan besar tinggal data asli, deploy, dan tracking.*
+> *Peta antara requirement di PRD dan kode yang sudah jalan: mana yang selesai, mana yang sebagian, mana yang belum disentuh, plus daftar gap dan checklist go-live. v1.3 mengikuti kode setelah `abc0fcf`, `bf79bc7`, dan perapian 9 Okt: shadcn pindah ke style `base-luma` (Base UI), Shop punya filter lengkap, detail produk dengan colorway dan size picker, halaman Cara Bayar dirombak, dan form request dikelompokkan jadi tiga langkah. Sisa pekerjaan besar tinggal data asli, deploy, dan tracking.*
 
 ---
 
@@ -43,7 +43,7 @@ date: 2026-09-22
 | Category | Rencana (PRD Section 7.1) | Yang ada di kode | Catatan |
 |---|---|---|---|
 | Framework | Next.js (App Router), TypeScript | Next.js 16.3.0, React 19.2.8, TypeScript 5 | Sesuai. `AGENTS.md` mengingatkan Next.js versi ini punya breaking changes |
-| Styling / UI | Tailwind CSS, shadcn/ui | Tailwind CSS 4 + shadcn/ui (button, accordion, carousel; style `radix-nova`) | Sesuai. Token & aturan visual di [Design System](DESIGN-SYSTEM.md) |
+| Styling / UI | Tailwind CSS, shadcn/ui | Tailwind CSS 4 + shadcn/ui style `base-luma` di atas Base UI (`@base-ui/react`): accordion, alert-dialog, badge, breadcrumb, button, card, carousel, checkbox, input, label, radio-group, select, separator, sheet, sonner, tabs, textarea, toggle(-group) | Sesuai. Token & aturan visual di [Design System](DESIGN-SYSTEM.md) |
 | Data | Database untuk request/pesanan | SQLite via `node:sqlite` bawaan Node (`data/pickmenpack.db`, path dari `DB_PATH`). Tiap koleksi disimpan sebagai JSON per baris | Cukup untuk volume solo. Butuh Node 24 (dipakai di dev: v24.16). Pindah ke Prisma/Supabase kalau butuh query/relasi |
 | Validasi | Zod | Validasi manual di server action (`request/actions.ts`) + atribut HTML | Zod belum dipakai — validasi server sudah ada, jadi bukan blocker |
 | Payment | Manual Transfer/QRIS, dikonfirmasi setelah harga fix | Alur cek harga → kuotasi final → bayar penuh, tanpa DP. Rekening dibaca dari Pengaturan admin | Sesuai PRD 5.5. Rekening & QRIS masih dummy (gap #4) |
@@ -60,12 +60,12 @@ pickmenpack/
 │   │   └── admin/           # login + panel (dashboard, pesanan, katalog, testimoni, faq, pengaturan)
 │   ├── components/
 │   │   ├── layout/          # site/ (header, nav, footer, bottom nav, announcement bar, WA melayang), admin/, section.tsx
-│   │   ├── shared/          # slider, page header, stat card, empty state, ikon, dsb.
+│   │   ├── shared/          # slider, page header, feature-list, option-row, segmented, copy-button, ikon, dsb.
 │   │   └── ui/              # primitive shadcn/ui
 │   ├── lib/                 # site.ts (konstanta brand/WA), format, ui.ts (class recipe), tones.ts
 │   └── modules/
 │       ├── admin/           # auth, actions, store SQLite, types (status order), status badge
-│       ├── catalog/         # data dummy, grid, card, browser (filter brand & pencarian)
+│       ├── catalog/         # data dummy, grid, card, browser + filters (filter.ts), detail, size-picker (sizes.ts)
 │       ├── faq/             # data + accordion
 │       ├── home/            # content.ts + hero, collections, why, how-it-works, pricing
 │       ├── payment/         # alur bayar + rekening (dari Pengaturan)
@@ -102,9 +102,9 @@ Status: **Done** = sesuai PRD, **Partial** = ada tapi belum lengkap, **Not start
 
 | PRD Ref | Requirement | Status | Catatan |
 |---|---|---|---|
-| 6.1 | Landing page & katalog promo | Done | Tiga section Why / How it works / Pricing dari `home/content.ts`, copy dan urutan section sama dengan Landing Page Content v0.2. Data katalog masih dummy |
+| 6.1 | Landing page & katalog promo | Done | Tiga section Why / How it works / Pricing dari `home/content.ts`, copy, eyebrow, dan urutan section sama dengan Landing Page Content v0.3. Data katalog masih dummy |
 | 6.1 | Shop: filter & halaman detail produk | Done | Filter Category/Gender/Price/Brand/Availability + Sort di URL; detail `/katalog/[slug]` dengan galeri per warna (colorway), pilihan ukuran, CTA request (membawa warna & ukuran) dan WhatsApp. Foto asli belum ada — placeholder siluet diwarnai sesuai colorway. Sumber data belum dari admin (gap #21) |
-| 6.1 | Form request jastip + checkbox Kebijakan Privasi | Done | Nama, WA, kota, item, ukuran, panjang kaki (opsional), perkiraan harga, referensi, COD/kirim, catatan, consent. Honeypot anti-bot |
+| 6.1 | Form request jastip + checkbox Kebijakan Privasi | Done | Tiga kelompok bernomor (About you · The pair · Delivery): nama, WA, kota, item, ukuran (preset EU 36–45), panjang kaki (opsional), perkiraan harga (pemisah ribuan, terisi otomatis dari harga promo kalau datang dari detail produk), referensi, COD/kirim, catatan, consent. Honeypot anti-bot |
 | 6.1 | Request tersimpan ke database | Done | `submitRequestAction` → `createOrder` (status `baru`, ikut store run berdasarkan cutoff) |
 | 6.1 | Halaman/pesan konfirmasi setelah submit | Done | Layar "Waiting for admin confirmation" + nomor request + jadwal cutoff/cek harga/bayar/belanja |
 | 5.4, 6.1 | Kalkulasi estimasi fee (Opsi A) | Done | `fee.ts` + tes `fee.check.ts` lulus |
@@ -149,7 +149,7 @@ Status: **Done** = sesuai PRD, **Partial** = ada tapi belum lengkap, **Not start
 | 16 | **Baru.** Halaman footer About, Blog, Terms belum ada (ditandai "Soon") | Link mati di footer | Buat halaman atau sembunyikan sampai siap |
 | 17 | **Baru.** Foto asli hero slider, kartu kategori, dan banner showcase belum diisi (field `image` kosong) | Landing tampil dengan placeholder | Isi `image` di `hero.tsx` dan `collections.tsx` |
 | 18 | **Baru.** Pesan WA "Kirim harga final" di `/admin/pesanan` memakai `orderMoney()` yang masih mengembalikan rentang (fee min–max dari `estimateFee`, ongkir Rp30–55rb) walau harga net sudah pasti | Bertentangan dengan PRD 5.5 (customer menerima angka final, bukan rentang) — admin harus menghitung manual | Tambah input fee & ongkir pasti per order (atau pakai batas bawah/atas tetap), lalu kirim satu angka total |
-| 19 | **Baru.** `allocateGroupDiscount()` di `request/fee.ts` sudah tidak punya pemakai sejak `group-buy.tsx` dihapus (`f29d642`) | Dead code yang bertentangan dengan PRD 5.8 (harga per-item, bukan proporsional) | Hapus fungsinya (tidak ada tes yang memakai) |
+| 19 | ~~`allocateGroupDiscount()` di `request/fee.ts` tanpa pemakai~~ | — | **Resolved 9 Okt 2026** — fungsi dihapus |
 | 20 | ~~Halaman Cara Bayar belum bertanggal~~ | — | **Resolved 6 Okt 2026** — langkah bayar memakai `nextStoreRun()` (tanggal asli). Halaman dirombak: alur 4 langkah, contoh pesan WhatsApp (harga final + rekening + gambar QRIS), daftar resmi rekening dengan tombol salin, nama merchant QRIS, dan peringatan anti-penipuan. QR tidak dipasang di website — dikirim per pesanan lewat WhatsApp |
 | 21 | **Baru.** Halaman publik (Shop, detail produk, home) membaca katalog dari `catalog/data.ts`, bukan dari DB yang diedit di admin Katalog. Form admin juga belum punya field kategori, gender, dan warna/foto — dan `saveProductAction` menimpa seluruh baris, jadi field yang tidak ada di form (kategori, foto) hilang saat produk diedit | Produk yang ditambah/diubah admin tidak muncul di website; foto per warna baru bisa diisi lewat kode | Satukan sumber: halaman publik baca `productDb`, form admin tambah kategori/gender/warna (nama, hex, daftar URL foto), dan simpan dengan merge ke baris lama. Pilihan gender di form: **Unisex (tampil di Men & Women)** sebagai default, Men, Women, Kids. Kategori Apparel nanti butuh tabel ukuran sendiri (S–XL), bukan EU/US/UK |
 
@@ -168,7 +168,7 @@ Target M4: awal Desember 2026.
 - [ ] Kirim harga final sebagai satu angka, bukan rentang (gap #18)
 - [ ] Siapkan Dockerfile, compose (volume `data/`), Caddyfile; set Cloudflare proxied + SSL Full (Strict) (gap #6)
 - [ ] Pasang Turnstile kalau spam lolos honeypot, Meta/TikTok Pixel, analytics, dan UptimeRobot
-- [ ] Jalankan `npm run build`, `npm run lint`, dan `npm test`
+- [ ] Jalankan `npm run build`, `npm run lint`, dan `npm test` (terakhir lulus 9 Okt 2026 di branch `development`)
 
 ---
 
@@ -179,3 +179,4 @@ Target M4: awal Desember 2026.
 | v1.0 | 21 Sep 2026 | Dokumen pertama: audit PRD (Notion v1.8 / draft v1.9) terhadap kode di commit `9ed0944`. Berisi tech stack rencana vs kode, struktur modul, navigasi, tabel traceability, 9 gap, dan checklist go-live. |
 | v1.1 | 22 Sep 2026 | Diperbarui mengikuti PRD v1.0 (restrukturisasi total & keputusan bisnis 22 Sep 2026). Baseline diganti ke PRD v1.0. Traceability: baris kategori Sandals/Apparel dan Bahasa UI berubah dari "Beyond PRD" jadi "Done" (sudah diresmikan di PRD); baris nama brand jadi "Done"; baris model pembayaran DP berubah dari "Done" jadi "Needs rework" karena sekarang bertentangan dengan PRD. Gap #1, #3, #5 ditandai "sudah diputuskan, tinggal implementasi". Gap #8 (nama brand) ditandai resolved. Tambah 2 gap baru: #10 (model pembayaran kode masih pakai DP, perlu dirombak total) dan #11 (nama status `dp` perlu di-rename). Go-live checklist ditambah item rombak alur pembayaran. |
 | v1.2 | 6 Okt 2026 | Audit ulang terhadap commit `f29d642` (branch `development`) dan baseline PRD v1.2 + Landing Page Content v0.1. Tech stack: shadcn/ui dan database SQLite sudah dipakai. Traceability: form request, penyimpanan DB, halaman konfirmasi, model pembayaran tanpa DP, jadwal store run, KPI konversi, FAQ, dan halaman Privacy jadi "Done"; baris Tipe Pengajuan Corporate/Bulk dihapus (dicabut di PRD v1.1). Gap #1, #3, #5, #7, #9, #10, #11 resolved; gap #2 sebagian. Tambah gap #12–#17 (guardrail "Zero deposit", urutan section landing, lokasi `store-run.ts`, filter kategori katalog, halaman footer "Soon", foto landing); #12–#14 langsung resolved hari yang sama karena Landing Page Content v0.2 disesuaikan dengan kode. Tambah gap #18 (harga final masih rentang), #19 (dead code `allocateGroupDiscount`), #20 (Cara Bayar belum bertanggal). Checklist go-live diperbarui. |
+| v1.3 | 9 Okt 2026 | Disesuaikan dengan kode setelah `abc0fcf`, `bf79bc7`, dan perapian UI 9 Okt. Tech stack: shadcn/ui pindah ke style `base-luma` (Base UI) dengan komponen lengkap. Struktur modul: shared (option-row, segmented, copy-button) dan catalog (filter, detail, size-picker). Traceability form request: tiga kelompok bernomor, harga terisi dari produk. Gap #19 resolved (dead code dihapus). Build, lint, dan test lulus. |
